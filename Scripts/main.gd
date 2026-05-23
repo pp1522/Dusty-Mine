@@ -23,6 +23,12 @@ extends Node2D
 			biome_noise = value
 			gen_helper()
 
+@export var ore_noise: Noise:
+	set(value):
+		if ore_noise != value:
+			ore_noise = value
+			gen_helper()
+
 @export var terrain_types: Array[TerrainType] = []:
 	set(value):
 		if terrain_types != value:
@@ -35,11 +41,28 @@ extends Node2D
 
 			gen_helper()
 
-@onready var tilemap: TileMapLayer = $TileMapLayer
+@export var ores_types: Array[TerrainType] = []:
+	set(value):
+		if ores_types != value:
+			ores_types = value
+
+			for ores in ores_types:
+				if ores:
+					if not ores.changed.is_connected(gen_helper):
+						ores.changed.connect(gen_helper)
+
+			gen_helper()
+
+@onready var tilemap: TileMapLayer = $Tiles/Ground
+@onready var ores_tilemap: TileMapLayer = $Tiles/Ores
 @onready var camera: Camera2D = $Camera2D
+
+var debug = false
 
 var TILE_WIDTH = 32
 var TILE_HEIGHT = 32
+
+var ore_noises: Dictionary = {}
 
 @export_tool_button("Regenerate Map")
 var regenerate_action = gen_helper
@@ -51,6 +74,8 @@ func _process(_delta: float) -> void:
 	var cx:int = floor(camera.position.x / TILE_WIDTH / chunk_width)
 	var cy:int = floor(camera.position.y / TILE_HEIGHT / chunk_height)
 
+	if debug: init_generator()
+
 	for x in range(-1, 2):
 		for y in range(-1, 2):
 			generate_chunk(x + cx, y + cy)
@@ -61,19 +86,29 @@ func gen_helper():
 
 func init_generator():
 	if tilemap == null: return
+	if ores_tilemap == null: return
 	tilemap.clear()
+	ores_tilemap.clear()
 
-	height_noise.seed = SEED
-	biome_noise.seed = SEED
+	var rng = RandomNumberGenerator.new()
+	rng.seed = SEED
 
-func place_biome(tile_pos: Vector2i, biome_value:float, terrain:TerrainType):
-	for i in range(terrain.biome_threshold.size()):
-		if biome_value < terrain.biome_threshold[i]:
-			tilemap.set_cell(tile_pos, 0, terrain.biome_atlas[i])
-			break
+	height_noise.seed = rng.randi()
+	biome_noise.seed = rng.randi()
+
+	ore_noises.clear()
+
+	for ore in ores_types:
+		if ore == null: continue
+
+		var noise := ore_noise.duplicate()
+		noise.seed = hash(str(SEED) + ore.name)
+
+		ore_noises[ore] = noise
 
 func generate_chunk(cx:int = 0, cy:int = 0):
 	if tilemap == null: return
+	if ores_tilemap == null: return
 
 	for x in range(chunk_width):
 		for y in range(chunk_height):
@@ -86,12 +121,36 @@ func generate_chunk(cx:int = 0, cy:int = 0):
 			var tile_pos = Vector2i(px, py)
 
 			for terrain in terrain_types:
-				if noise_value < terrain.threshold:
+				if terrain and noise_value < terrain.threshold:
 					if terrain.type == TerrainType.TileType.Height:
 						tilemap.set_cell(tile_pos, 0, terrain.atlas)
-						break
 					elif terrain.type == TerrainType.TileType.Biome:
 						var biome_value = biome_noise.get_noise_2d(px, py)
 						biome_value = (biome_value + 1) / 2
 						place_biome(tile_pos, biome_value, terrain)
-						break
+
+					if terrain.place_ore:
+						place_ores(tile_pos, px, py)
+
+					break
+
+func place_biome(tile_pos: Vector2i, biome_value: float, terrain: TerrainType):
+	for i in range(terrain.biome_threshold.size()):
+		if (biome_value < terrain.biome_threshold[i]) and (i < terrain.biome_atlas.size()):
+			tilemap.set_cell(tile_pos, 0, terrain.biome_atlas[i])
+			break
+
+func place_ores(tile_pos: Vector2i, px: int, py: int):
+	for ore in ores_types:
+		if ore == null: continue
+
+		var noise: Noise = ore_noises[ore]
+		if noise == null: continue
+
+		var ore_value = noise.get_noise_2d(px, py)
+		ore_value = (ore_value + 1.0) / 2.0
+
+		if ore_value < ore.threshold:
+			if ore.type == TerrainType.TileType.Height:
+				ores_tilemap.set_cell(tile_pos, 0, ore.atlas)
+				break

@@ -13,12 +13,13 @@ enum TileType {Height, Biome}
 			notify_property_list_changed()
 
 @export var name: String
-
-var threshold: float:
+@export var place_ore: bool = false
+@export var threshold: float:
 	set(value):
 		if threshold != value:
 			threshold = value
 			emit_changed()
+
 var biome_threshold: Array[float] = []:
 	set(value):
 		if biome_threshold != value:
@@ -31,14 +32,6 @@ var biome_atlas: Array[Vector2i] = []
 
 func _get_property_list():
 	var properties = []
-
-	properties.append({
-		"name": "threshold",
-		"type": TYPE_FLOAT,
-		"hint": PROPERTY_HINT_RANGE,
-		"hint_string": "0,1,0.01",
-		"usage": PROPERTY_USAGE_DEFAULT if type == TileType.Height else PROPERTY_USAGE_NO_EDITOR
-	})
 
 	properties.append({
 		"name": "biome_threshold",
