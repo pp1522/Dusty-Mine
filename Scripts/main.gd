@@ -2,18 +2,25 @@
 extends Node2D
 
 
+@export var chunk_width = 32
+@export var chunk_height = 32
+
 @export var SEED = 1:
 	set(value):
 		if SEED != value:
 			SEED = value
 			gen_helper()
 
-@export var chunk_width = 32
-@export var chunk_height = 32
-@export_range(0, 1, 0.01) var noise_scale = 0.1:
+@export var height_noise: Noise:
 	set(value):
-		if noise_scale != value:
-			noise_scale = value
+		if height_noise != value:
+			height_noise = value
+			gen_helper()
+
+@export var biome_noise: Noise:
+	set(value):
+		if biome_noise != value:
+			biome_noise = value
 			gen_helper()
 
 @export var terrain_types: Array[TerrainType] = []:
@@ -37,8 +44,6 @@ var TILE_HEIGHT = 32
 @export_tool_button("Regenerate Map")
 var regenerate_action = gen_helper
 
-var noise = FastNoiseLite.new()
-
 func _ready() -> void:
 	init_generator()
 
@@ -56,11 +61,16 @@ func gen_helper():
 
 func init_generator():
 	if tilemap == null: return
-
-	noise.seed = SEED
-	noise.noise_type = FastNoiseLite.TYPE_PERLIN
-	noise.frequency = noise_scale
 	tilemap.clear()
+
+	height_noise.seed = SEED
+	biome_noise.seed = SEED
+
+func place_biome(tile_pos: Vector2i, biome_value:float, terrain:TerrainType):
+	for i in range(terrain.biome_threshold.size()):
+		if biome_value < terrain.biome_threshold[i]:
+			tilemap.set_cell(tile_pos, 0, terrain.biome_atlas[i])
+			break
 
 func generate_chunk(cx:int = 0, cy:int = 0):
 	if tilemap == null: return
@@ -70,12 +80,18 @@ func generate_chunk(cx:int = 0, cy:int = 0):
 			var px = x + cx * chunk_width
 			var py = y + cy * chunk_height
 
-			var noise_value = noise.get_noise_2d(px, py)
+			var noise_value = height_noise.get_noise_2d(px, py)
 			noise_value = (noise_value + 1) / 2
 
 			var tile_pos = Vector2i(px, py)
 
 			for terrain in terrain_types:
 				if noise_value < terrain.threshold:
-					tilemap.set_cell(tile_pos, 0, terrain.atlas)
-					break
+					if terrain.type == TerrainType.TileType.Height:
+						tilemap.set_cell(tile_pos, 0, terrain.atlas)
+						break
+					elif terrain.type == TerrainType.TileType.Biome:
+						var biome_value = biome_noise.get_noise_2d(px, py)
+						biome_value = (biome_value + 1) / 2
+						place_biome(tile_pos, biome_value, terrain)
+						break
