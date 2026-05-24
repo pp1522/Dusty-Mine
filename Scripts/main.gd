@@ -54,11 +54,12 @@ extends Node2D
 
 			gen_helper()
 
+@onready var liquid_tilemap: TileMapLayer = $Tiles/Liquid
 @onready var tilemap: TileMapLayer = $Tiles/Ground
 @onready var ores_tilemap: TileMapLayer = $Tiles/Ores
 @onready var camera: Camera2D = $Camera2D
 
-var debug = false
+var debug = true
 var ore_noises: Dictionary = {}
 
 @export_tool_button("Regenerate Map")
@@ -82,8 +83,11 @@ func gen_helper():
 	generate_chunk()
 
 func init_generator():
+	if liquid_tilemap == null: return
 	if tilemap == null: return
 	if ores_tilemap == null: return
+
+	liquid_tilemap.clear()
 	tilemap.clear()
 	ores_tilemap.clear()
 
@@ -104,6 +108,7 @@ func init_generator():
 		ore_noises[ore] = noise
 
 func generate_chunk(cx:int = 0, cy:int = 0):
+	if liquid_tilemap == null: return
 	if tilemap == null: return
 	if ores_tilemap == null: return
 
@@ -120,7 +125,7 @@ func generate_chunk(cx:int = 0, cy:int = 0):
 			for terrain in terrain_types:
 				if terrain and noise_value < terrain.threshold:
 					if terrain.type == TerrainType.TileType.Height:
-						tilemap.set_cell(tile_pos, 0, terrain.atlas)
+						place_tile(tile_pos, terrain.atlas, terrain.is_liquid)
 					elif terrain.type == TerrainType.TileType.Biome:
 						var biome_value = biome_noise.get_noise_2d(px, py)
 						biome_value = (biome_value + 1) / 2
@@ -131,10 +136,18 @@ func generate_chunk(cx:int = 0, cy:int = 0):
 
 					break
 
+func place_tile(tile_pos: Vector2i, atlas: Vector2i, is_liquid: bool):
+	if is_liquid:
+		liquid_tilemap.set_cell(tile_pos, 0, atlas)
+	else:
+		tilemap.set_cell(tile_pos, 0, atlas)
+
 func place_biome(tile_pos: Vector2i, biome_value: float, terrain: TerrainType):
 	for i in range(terrain.biome_threshold.size()):
-		if (biome_value < terrain.biome_threshold[i]) and (i < terrain.biome_atlas.size()):
-			tilemap.set_cell(tile_pos, 0, terrain.biome_atlas[i])
+		if ((biome_value < terrain.biome_threshold[i]) and
+			(i < terrain.biome_atlas.size()) and
+			(i < terrain.tile_is_liquid.size())):
+			place_tile(tile_pos, terrain.biome_atlas[i], terrain.tile_is_liquid[i])
 			break
 
 func place_ores(tile_pos: Vector2i, px: int, py: int):

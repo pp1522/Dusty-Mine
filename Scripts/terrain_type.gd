@@ -29,6 +29,8 @@ var biome_threshold: Array[float] = []:
 var atlas: Vector2i
 var biome_atlas: Array[Vector2i] = []
 
+var is_liquid: bool = false
+var tile_is_liquid: Array[bool] = []
 
 func _get_property_list():
 	var properties = []
@@ -51,6 +53,20 @@ func _get_property_list():
 		"type": TYPE_ARRAY,
 		"hint": PROPERTY_HINT_ARRAY_TYPE,
 		"hint_string": "%d/%d:Vector2i" % [TYPE_VECTOR2I, PROPERTY_HINT_NONE],
+		"usage": PROPERTY_USAGE_DEFAULT if type == TileType.Biome else PROPERTY_USAGE_NO_EDITOR
+	})
+
+	properties.append({
+		"name": "is_liquid",
+		"type": TYPE_BOOL,
+		"usage": PROPERTY_USAGE_DEFAULT if type == TileType.Height else PROPERTY_USAGE_NO_EDITOR
+	})
+
+	properties.append({
+		"name": "tile_is_liquid",
+		"type": TYPE_ARRAY,
+		"hint": PROPERTY_HINT_ARRAY_TYPE,
+		"hint_string": "%d/%d:Bool" % [TYPE_BOOL, PROPERTY_HINT_NONE],
 		"usage": PROPERTY_USAGE_DEFAULT if type == TileType.Biome else PROPERTY_USAGE_NO_EDITOR
 	})
 
