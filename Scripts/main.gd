@@ -2,6 +2,7 @@
 extends Node2D
 
 
+@export var TILE_SIZE: Vector2i = Vector2i(32, 32)
 @export var chunk_width = 32
 @export var chunk_height = 32
 
@@ -58,10 +59,6 @@ extends Node2D
 @onready var camera: Camera2D = $Camera2D
 
 var debug = false
-
-var TILE_WIDTH = 32
-var TILE_HEIGHT = 32
-
 var ore_noises: Dictionary = {}
 
 @export_tool_button("Regenerate Map")
@@ -71,8 +68,8 @@ func _ready() -> void:
 	init_generator()
 
 func _process(_delta: float) -> void:
-	var cx:int = floor(camera.position.x / TILE_WIDTH / chunk_width)
-	var cy:int = floor(camera.position.y / TILE_HEIGHT / chunk_height)
+	var cx:int = floor(camera.position.x / TILE_SIZE.x / chunk_width)
+	var cy:int = floor(camera.position.y / TILE_SIZE.y / chunk_height)
 
 	if debug: init_generator()
 

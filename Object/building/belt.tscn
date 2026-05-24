@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://ddjth2chkl413"]
+
+[ext_resource type="Texture2D" uid="uid://ccj00ys5tki8p" path="res://Assets/building/belt.png" id="1_6165b"]
+[ext_resource type="Script" uid="uid://ch4bidpdfke7m" path="res://Scripts/building.gd" id="2_d3vnb"]
+
+[node name="Sprite2D" type="Sprite2D" unique_id=991361083]
+modulate = Color(1, 1, 1, 0.39215687)
+texture = ExtResource("1_6165b")
+script = ExtResource("2_d3vnb")
+rect = Rect2(0, 0, 32, 32)
