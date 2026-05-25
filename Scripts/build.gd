@@ -1,30 +1,29 @@
 extends Node2D
 
 
-const OBJECT = preload("res://Object/building/drill.tscn")
+const BUILDING = {
+	"drill": preload("res://Object/building/drill.tscn"),
+	"belt": preload("res://Object/building/belt.tscn")
+}
 
 @export var TILE_SIZE: Vector2i = Vector2i(32, 32)
 @export var ground_tile: TileMapLayer
 
 var current_building
 var old_pos: Vector2
+var building_object: PackedScene
 
 
 func _input(_event: InputEvent) -> void:
-	if Input.is_action_just_pressed("place") and not current_building:
-		var newBuilding = OBJECT.instantiate()
-		current_building = newBuilding
-
-		newBuilding.modulate.r = 0.0
-		newBuilding.modulate.g = 0.0
-		newBuilding.modulate.b = 0.0
-
-		add_child(newBuilding)
-		snap(newBuilding)
-		update_highlight(newBuilding)
-
-	elif Input.is_action_just_pressed("place"):
+	if Input.is_action_just_pressed("place") and current_building:
 		place_building()
+
+	elif Input.is_action_just_pressed("remove") and current_building:
+		current_building.queue_free()
+		current_building = null
+
+	elif Input.is_action_just_pressed("remove"):
+		remove_building()
 
 func _process(_delta: float) -> void:
 	if current_building:
@@ -94,3 +93,28 @@ func place_building():
 	snap(current_building)
 
 	current_building = null
+
+func remove_building():
+	var pos = get_global_mouse_position()
+
+	for child in get_children():
+		if child.get_global_rect().has_point(pos):
+			child.queue_free()
+			return
+
+func _on_gui_building_select(building: String) -> void:
+	if BUILDING.has(building):
+		var newBuilding = BUILDING[building].instantiate()
+		current_building = newBuilding
+
+		newBuilding.modulate.r = 0.0
+		newBuilding.modulate.g = 0.0
+		newBuilding.modulate.b = 0.0
+
+		add_child(newBuilding)
+		snap(newBuilding)
+		update_highlight(newBuilding)
+	else:
+		if current_building:
+			current_building.queue_free()
+			current_building = null
