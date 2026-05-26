@@ -7,8 +7,9 @@ const BUILDING = {
 }
 
 @export var TILE_SIZE: Vector2i = Vector2i(32, 32)
-@export var ground_tile: TileMapLayer
 @export var liquid_tile: TileMapLayer
+@export var ground_tile: TileMapLayer
+@export var mineable_ground_tile: TileMapLayer
 @export var ore_tile: TileMapLayer
 
 var current_building
@@ -92,6 +93,7 @@ func is_valid():
 		var tile_data = ground_tile.get_cell_tile_data(t)
 		var liquid_tile_data = liquid_tile.get_cell_tile_data(t)
 		var ore_tile_data = ore_tile.get_cell_tile_data(t)
+		var ground_tile_data = mineable_ground_tile.get_cell_tile_data(t)
 
 		if not current_building.can_place_on_ground and tile_data:
 			return false
@@ -101,6 +103,10 @@ func is_valid():
 
 		if current_building.require_place_on_ore and ore_tile_data:
 			ore_cover += 1
+
+		if current_building.require_place_on_ore and ground_tile_data:
+			ore_cover += 1
+
 
 	if current_building.require_place_on_ore and ore_cover == 0:
 		return false

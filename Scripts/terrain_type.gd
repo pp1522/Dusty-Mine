@@ -3,7 +3,7 @@ class_name TerrainType
 extends Resource
 
 
-enum TileType {Height, Biome}
+enum TileType {Height, Biome, Ore}
 
 @export var type: TileType = TileType.Height:
 	set(value):
@@ -13,12 +13,13 @@ enum TileType {Height, Biome}
 			notify_property_list_changed()
 
 @export var name: String
-@export var place_ore: bool = false
 @export var threshold: float:
 	set(value):
 		if threshold != value:
 			threshold = value
 			emit_changed()
+
+var place_ore: bool = false
 
 var biome_threshold: Array[float] = []:
 	set(value):
@@ -32,8 +33,17 @@ var biome_atlas: Array[Vector2i] = []
 var is_liquid: bool = false
 var tile_is_liquid: Array[bool] = []
 
+var is_mineable: bool = false
+var tile_is_mineable: Array[bool] = []
+
 func _get_property_list():
 	var properties = []
+
+	properties.append({
+		"name": "place_ore",
+		"type": TYPE_BOOL,
+		"usage": PROPERTY_USAGE_DEFAULT if type == TileType.Height else PROPERTY_USAGE_NO_EDITOR
+	})
 
 	properties.append({
 		"name": "biome_threshold",
@@ -45,7 +55,7 @@ func _get_property_list():
 	properties.append({
 		"name": "atlas",
 		"type": TYPE_VECTOR2I,
-		"usage": PROPERTY_USAGE_DEFAULT if type == TileType.Height else PROPERTY_USAGE_NO_EDITOR
+		"usage": PROPERTY_USAGE_DEFAULT if (type == TileType.Height) or (type == TileType.Ore) else PROPERTY_USAGE_NO_EDITOR
 	})
 
 	properties.append({
@@ -64,6 +74,20 @@ func _get_property_list():
 
 	properties.append({
 		"name": "tile_is_liquid",
+		"type": TYPE_ARRAY,
+		"hint": PROPERTY_HINT_ARRAY_TYPE,
+		"hint_string": "%d/%d:Bool" % [TYPE_BOOL, PROPERTY_HINT_NONE],
+		"usage": PROPERTY_USAGE_DEFAULT if type == TileType.Biome else PROPERTY_USAGE_NO_EDITOR
+	})
+
+	properties.append({
+		"name": "is_mineable",
+		"type": TYPE_BOOL,
+		"usage": PROPERTY_USAGE_DEFAULT if type == TileType.Height else PROPERTY_USAGE_NO_EDITOR
+	})
+
+	properties.append({
+		"name": "tile_is_mineable",
 		"type": TYPE_ARRAY,
 		"hint": PROPERTY_HINT_ARRAY_TYPE,
 		"hint_string": "%d/%d:Bool" % [TYPE_BOOL, PROPERTY_HINT_NONE],

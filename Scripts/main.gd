@@ -56,10 +56,11 @@ extends Node2D
 
 @onready var liquid_tilemap: TileMapLayer = $Tiles/Liquid
 @onready var tilemap: TileMapLayer = $Tiles/Ground
+@onready var mineable_tilemap: TileMapLayer = $Tiles/Ground_Mineable
 @onready var ores_tilemap: TileMapLayer = $Tiles/Ores
 @onready var camera: Camera2D = $Camera2D
 
-var debug = true
+var debug = false
 var ore_noises: Dictionary = {}
 
 @export_tool_button("Regenerate Map")
@@ -85,10 +86,12 @@ func gen_helper():
 func init_generator():
 	if liquid_tilemap == null: return
 	if tilemap == null: return
+	if mineable_tilemap == null: return
 	if ores_tilemap == null: return
 
 	liquid_tilemap.clear()
 	tilemap.clear()
+	mineable_tilemap.clear()
 	ores_tilemap.clear()
 
 	var rng = RandomNumberGenerator.new()
@@ -110,6 +113,7 @@ func init_generator():
 func generate_chunk(cx:int = 0, cy:int = 0):
 	if liquid_tilemap == null: return
 	if tilemap == null: return
+	if mineable_tilemap == null: return
 	if ores_tilemap == null: return
 
 	for x in range(chunk_width):
@@ -125,7 +129,7 @@ func generate_chunk(cx:int = 0, cy:int = 0):
 			for terrain in terrain_types:
 				if terrain and noise_value < terrain.threshold:
 					if terrain.type == TerrainType.TileType.Height:
-						place_tile(tile_pos, terrain.atlas, terrain.is_liquid)
+						place_tile(tile_pos, terrain.atlas, terrain.is_liquid, terrain.is_mineable)
 					elif terrain.type == TerrainType.TileType.Biome:
 						var biome_value = biome_noise.get_noise_2d(px, py)
 						biome_value = (biome_value + 1) / 2
@@ -136,9 +140,11 @@ func generate_chunk(cx:int = 0, cy:int = 0):
 
 					break
 
-func place_tile(tile_pos: Vector2i, atlas: Vector2i, is_liquid: bool):
+func place_tile(tile_pos: Vector2i, atlas: Vector2i, is_liquid: bool, is_mineable: bool):
 	if is_liquid:
 		liquid_tilemap.set_cell(tile_pos, 0, atlas)
+	elif is_mineable:
+		mineable_tilemap.set_cell(tile_pos, 0, atlas)
 	else:
 		tilemap.set_cell(tile_pos, 0, atlas)
 
@@ -146,8 +152,9 @@ func place_biome(tile_pos: Vector2i, biome_value: float, terrain: TerrainType):
 	for i in range(terrain.biome_threshold.size()):
 		if ((biome_value < terrain.biome_threshold[i]) and
 			(i < terrain.biome_atlas.size()) and
-			(i < terrain.tile_is_liquid.size())):
-			place_tile(tile_pos, terrain.biome_atlas[i], terrain.tile_is_liquid[i])
+			(i < terrain.tile_is_liquid.size()) and
+			(i < terrain.tile_is_mineable.size())):
+			place_tile(tile_pos, terrain.biome_atlas[i], terrain.tile_is_liquid[i], terrain.tile_is_mineable[i])
 			break
 
 func place_ores(tile_pos: Vector2i, px: int, py: int):
@@ -161,6 +168,6 @@ func place_ores(tile_pos: Vector2i, px: int, py: int):
 		ore_value = (ore_value + 1.0) / 2.0
 
 		if ore_value < ore.threshold:
-			if ore.type == TerrainType.TileType.Height:
+			if ore.type == TerrainType.TileType.Ore:
 				ores_tilemap.set_cell(tile_pos, 0, ore.atlas)
 				break
