@@ -8,3 +8,4 @@ modulate = Color(1, 1, 1, 0.39215687)
 texture = ExtResource("1_6165b")
 script = ExtResource("2_d3vnb")
 rect = Rect2(0, 0, 32, 32)
+can_rotate = true

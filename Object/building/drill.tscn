@@ -8,3 +8,4 @@ modulate = Color(1, 1, 1, 0.39215687)
 texture = ExtResource("1_rcu5d")
 script = ExtResource("2_mf003")
 rect = Rect2(0, 0, 64, 64)
+require_place_on_ore = true

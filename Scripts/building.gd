@@ -2,6 +2,10 @@ extends Sprite2D
 
 
 @export var rect: Rect2
+@export var can_rotate: bool = false
+@export var can_place_on_ground: bool = true
+@export var can_place_on_liquid: bool = false
+@export var require_place_on_ore: bool = false
 
 func get_global_rect():
 	return Rect2(
@@ -14,3 +18,7 @@ func place():
 	modulate.g = 1.0
 	modulate.b = 1.0
 	modulate.a = 1.0
+
+func building_rotate(deg: float):
+	if can_rotate:
+		global_rotation = deg_to_rad(deg)
