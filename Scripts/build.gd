@@ -7,12 +7,19 @@ const BUILDING = {
 }
 
 @export var TILE_SIZE: Vector2i = Vector2i(32, 32)
+@export var player: CharacterBody2D
+@export var reach: int = 12
+
 @export var liquid_tile: TileMapLayer
 @export var ground_tile: TileMapLayer
 @export var mineable_ground_tile: TileMapLayer
 @export var ore_tile: TileMapLayer
 
-var current_building
+@onready var place_builds: Node2D = $Place
+@onready var queue_builds: Node2D = $Queue
+
+var select_building: String = ""
+var current_building: Sprite2D
 var old_pos: Vector2
 var building_object: PackedScene
 var current_rotation: float = 0.0
@@ -20,14 +27,15 @@ var current_rotation: float = 0.0
 
 func _input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("place") and current_building:
-		place_building()
+		queue_building()
 
 	elif Input.is_action_just_pressed("remove") and current_building:
 		current_building.queue_free()
 		current_building = null
+		select_building = ""
 
 	elif Input.is_action_just_pressed("remove"):
-		remove_building()
+		remove_queue()
 
 	elif Input.is_action_just_pressed("rotate") and current_building:
 		current_rotation = wrapf(current_rotation+90.0, 0.0, 360.0)
@@ -35,18 +43,28 @@ func _input(_event: InputEvent) -> void:
 
 func _process(_delta: float) -> void:
 	if current_building:
-		snap(current_building)
+		snap(current_building, get_global_mouse_position())
+	elif select_building:
+		set_current_building(select_building)
+
+	for c in queue_builds.get_children():
+		var distance = c.global_position.distance_to(player.global_position)
+		if distance <= reach*TILE_SIZE.x:
+			if c.remove:
+				c.queue_free()
+			else:
+				place_building(c)
 
 func update_highlight(newBuilding):
-	if is_valid():
+	if is_valid(newBuilding):
 		newBuilding.modulate.r = 0.0
 		newBuilding.modulate.g = 1.0
 	else:
 		newBuilding.modulate.r = 1.0
 		newBuilding.modulate.g = 0.0
 
-func snap(newBuilding: Sprite2D):
-	newBuilding.global_position = get_global_mouse_position() - TILE_SIZE/2.0
+func snap(newBuilding: Sprite2D, pos: Vector2):
+	newBuilding.global_position = pos - TILE_SIZE/2.0
 
 	var offset = Vector2(0, 0)
 	if int(newBuilding.rect.size.x) % (TILE_SIZE.x*2) != 0:
@@ -75,17 +93,22 @@ func get_cover(newBuilding):
 
 	return tiles
 
-func is_valid():
+func is_valid(newBuilding: Sprite2D):
 	var intersects = []
 
 	# building
-	for child in get_children():
-		if child.get_global_rect().intersects(current_building.get_global_rect()):
+	for child in place_builds.get_children():
+		if child.get_global_rect().intersects(newBuilding.get_global_rect()):
 			intersects.append(child)
 
-	if intersects.size() != 1: return false
+	# queue
+	for child in queue_builds.get_children():
+		if child.get_global_rect().intersects(newBuilding.get_global_rect()):
+			intersects.append(child)
 
-	var cover = get_cover(current_building)
+	if intersects.size() != 0: return false
+
+	var cover = get_cover(newBuilding)
 
 	# tile stuff
 	var ore_cover = 0
@@ -95,53 +118,91 @@ func is_valid():
 		var ore_tile_data = ore_tile.get_cell_tile_data(t)
 		var ground_tile_data = mineable_ground_tile.get_cell_tile_data(t)
 
-		if not current_building.can_place_on_ground and tile_data:
+		if not newBuilding.can_place_on_ground and tile_data:
 			return false
 
-		if not current_building.can_place_on_liquid and liquid_tile_data:
+		if not newBuilding.can_place_on_liquid and liquid_tile_data:
 			return false
 
-		if current_building.require_place_on_ore and ore_tile_data:
+		if newBuilding.require_place_on_ore and ore_tile_data:
 			ore_cover += 1
 
-		if current_building.require_place_on_ore and ground_tile_data:
+		if newBuilding.require_place_on_ore and ground_tile_data:
 			ore_cover += 1
 
 
-	if current_building.require_place_on_ore and ore_cover == 0:
+	if newBuilding.require_place_on_ore and ore_cover == 0:
 		return false
 
 	return true
 
-func place_building():
-	if not is_valid(): return
-	current_building.place()
+func queue_building():
+	if not is_valid(current_building): return
+	current_building.modulate.r = 1.0
+	current_building.modulate.g = 1.0
+	current_building.modulate.b = 1.0
 
-	snap(current_building)
-
+	current_building.reparent(queue_builds)
+	snap(current_building, get_global_mouse_position())
 	current_building = null
 
-func remove_building():
+func place_building(building: Sprite2D):
+	building.reparent(place_builds)
+	snap(building, building.global_position)
+	building.place()
+
+func remove_queue():
 	var pos = get_global_mouse_position()
 
-	for child in get_children():
-		if child.get_global_rect().has_point(pos):
+	for child in queue_builds.get_children():
+		if child.remove:
+			child.modulate.r = 1.0
+			child.modulate.g = 1.0
+			child.modulate.b = 1.0
+
+			child.remove = false
+			child.reparent(place_builds)
+			return
+		elif child.get_global_rect().has_point(pos):
 			child.queue_free()
 			return
 
+	for child in place_builds.get_children():
+		if child.get_global_rect().has_point(pos):
+			child.modulate.r = 1.0
+			child.modulate.g = 0.0
+			child.modulate.b = 0.0
+
+			child.remove = true
+			child.reparent(queue_builds)
+
+func set_current_building(build: String):
+	if current_building:
+		current_building.queue_free()
+		current_building = null
+
+	var newBuilding = BUILDING[build].instantiate()
+	current_building = newBuilding
+
+	newBuilding.modulate.r = 0.0
+	newBuilding.modulate.g = 0.0
+	newBuilding.modulate.b = 0.0
+
+	add_child(newBuilding)
+	snap(newBuilding, get_global_mouse_position())
+	update_highlight(newBuilding)
+	current_building.building_rotate(current_rotation)
+
 func _on_gui_building_select(building: String) -> void:
-	if BUILDING.has(building) and current_building == null:
-		var newBuilding = BUILDING[building].instantiate()
-		current_building = newBuilding
+	if BUILDING.has(building):
+		select_building = building
 
-		newBuilding.modulate.r = 0.0
-		newBuilding.modulate.g = 0.0
-		newBuilding.modulate.b = 0.0
+		if current_building:
+			current_building.queue_free()
+			current_building = null
+			select_building = ""
 
-		add_child(newBuilding)
-		snap(newBuilding)
-		update_highlight(newBuilding)
-		current_building.building_rotate(current_rotation)
+		set_current_building(building)
 	else:
 		if current_building:
 			current_building.queue_free()

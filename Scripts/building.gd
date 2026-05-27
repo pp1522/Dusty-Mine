@@ -2,10 +2,15 @@ extends Sprite2D
 
 
 @export var rect: Rect2
+
+@export var build_speed: int = 10
 @export var can_rotate: bool = false
+
 @export var can_place_on_ground: bool = true
 @export var can_place_on_liquid: bool = false
 @export var require_place_on_ore: bool = false
+
+var remove: bool = false
 
 func get_global_rect():
 	return Rect2(

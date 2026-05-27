@@ -62,6 +62,7 @@ extends Node2D
 
 var debug = false
 var ore_noises: Dictionary = {}
+var loaded_chunks: Dictionary = {}
 
 @export_tool_button("Regenerate Map")
 var regenerate_action = gen_helper
@@ -75,9 +76,24 @@ func _process(_delta: float) -> void:
 
 	if debug: init_generator()
 
+	var chunks: Array[Vector2i] = []
+
 	for x in range(-1, 2):
 		for y in range(-1, 2):
-			generate_chunk(x + cx, y + cy)
+			var chunk = Vector2i(x+cx, y+cy)
+
+			chunks.append(chunk)
+
+			if loaded_chunks.has(chunk):
+				continue
+			else:
+				generate_chunk(chunk)
+				loaded_chunks[chunk] = true
+
+	for c in loaded_chunks.keys():
+		if !chunks.has(c):
+			remove_chunk(c)
+			loaded_chunks.erase(c)
 
 func gen_helper():
 	init_generator()
@@ -110,7 +126,7 @@ func init_generator():
 
 		ore_noises[ore] = noise
 
-func generate_chunk(cx:int = 0, cy:int = 0):
+func generate_chunk(chunk: Vector2i = Vector2i(0, 0)):
 	if liquid_tilemap == null: return
 	if tilemap == null: return
 	if mineable_tilemap == null: return
@@ -118,8 +134,8 @@ func generate_chunk(cx:int = 0, cy:int = 0):
 
 	for x in range(chunk_width):
 		for y in range(chunk_height):
-			var px = x + cx * chunk_width
-			var py = y + cy * chunk_height
+			var px = x + chunk.x * chunk_width
+			var py = y + chunk.y * chunk_height
 
 			var noise_value = height_noise.get_noise_2d(px, py)
 			noise_value = (noise_value + 1) / 2
@@ -171,3 +187,25 @@ func place_ores(tile_pos: Vector2i, px: int, py: int):
 			if ore.type == TerrainType.TileType.Ore:
 				ores_tilemap.set_cell(tile_pos, 0, ore.atlas)
 				break
+
+func remove_tile(tile_pos: Vector2i):
+	liquid_tilemap.erase_cell(tile_pos)
+	mineable_tilemap.erase_cell(tile_pos)
+	tilemap.erase_cell(tile_pos)
+	ores_tilemap.erase_cell(tile_pos)
+
+func remove_chunk(chunk: Vector2i):
+	if liquid_tilemap == null: return
+	if tilemap == null: return
+	if mineable_tilemap == null: return
+	if ores_tilemap == null: return
+	if !loaded_chunks.has(chunk): return
+
+	for x in range(chunk_width):
+		for y in range(chunk_height):
+			var px = x + chunk.x * chunk_width
+			var py = y + chunk.y * chunk_height
+
+			var tile_pos = Vector2i(px, py)
+
+			remove_tile(tile_pos)
