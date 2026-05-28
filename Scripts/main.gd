@@ -60,7 +60,7 @@ extends Node2D
 @onready var ores_tilemap: TileMapLayer = $Tiles/Ores
 @onready var camera: Camera2D = $Camera2D
 
-var debug = false
+var debug = true
 var ore_noises: Dictionary = {}
 var loaded_chunks: Dictionary = {}
 
@@ -109,6 +109,8 @@ func init_generator():
 	tilemap.clear()
 	mineable_tilemap.clear()
 	ores_tilemap.clear()
+
+	loaded_chunks = {}
 
 	var rng = RandomNumberGenerator.new()
 	rng.seed = SEED
