@@ -10,6 +10,7 @@ extends Sprite2D
 @export var can_place_on_liquid: bool = false
 @export var require_place_on_ore: bool = false
 
+var item: Array[ResourceType] = []
 var remove: bool = false
 
 func get_global_rect():

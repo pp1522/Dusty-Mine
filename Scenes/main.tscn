@@ -192,7 +192,6 @@ camera = NodePath("../Camera2D")
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1765248887]
 zoom = Vector2(2, 2)
 script = ExtResource("3_kry3j")
-min_zoom = 0.2
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=17001104]
 

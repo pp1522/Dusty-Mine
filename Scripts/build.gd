@@ -196,12 +196,6 @@ func set_current_building(build: String):
 func _on_gui_building_select(building: String) -> void:
 	if BUILDING.has(building):
 		select_building = building
-
-		if current_building:
-			current_building.queue_free()
-			current_building = null
-			select_building = ""
-
 		set_current_building(building)
 	else:
 		if current_building:
