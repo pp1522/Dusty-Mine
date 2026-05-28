@@ -10,6 +10,8 @@ extends Sprite2D
 @export var can_place_on_liquid: bool = false
 @export var require_place_on_ore: bool = false
 
+@onready var ui: Control = $Control
+
 var item: Array[ResourceType] = []
 var remove: bool = false
 
@@ -28,3 +30,9 @@ func place():
 func building_rotate(deg: float):
 	if can_rotate:
 		global_rotation = deg_to_rad(deg)
+
+func toggle_item():
+	if ui.visible:
+		ui.visible = false
+	else:
+		ui.visible = true
