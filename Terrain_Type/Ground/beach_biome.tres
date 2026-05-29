@@ -1,0 +1,43 @@
+[gd_resource type="Resource" script_class="TerrainType" format=3 uid="uid://bjc621f4g8j3t"]
+
+[ext_resource type="Script" uid="uid://bl5usqx6mgiix" path="res://Scripts/Terrain/terrain_type.gd" id="1_cks7j"]
+[ext_resource type="Script" uid="uid://cjs2tv4xbgr4f" path="res://Scripts/Terrain/terrain_info.gd" id="1_g8cj2"]
+
+[sub_resource type="Resource" id="Resource_g8cj2"]
+script = ExtResource("1_g8cj2")
+name = "Sand"
+threshold = 0.7
+atlas = Vector2i(2, 0)
+tile_is_mineable = true
+metadata/_custom_type_script = "uid://cjs2tv4xbgr4f"
+
+[sub_resource type="Resource" id="Resource_xxy4t"]
+script = ExtResource("1_g8cj2")
+name = "Snowy Sand"
+threshold = 0.9
+atlas = Vector2i(2, 1)
+tile_is_mineable = true
+metadata/_custom_type_script = "uid://cjs2tv4xbgr4f"
+
+[sub_resource type="Resource" id="Resource_yiiwt"]
+script = ExtResource("1_g8cj2")
+name = "Mystic Sand"
+threshold = 1.0
+atlas = Vector2i(5, 0)
+tile_is_mineable = true
+metadata/_custom_type_script = "uid://cjs2tv4xbgr4f"
+
+[resource]
+script = ExtResource("1_cks7j")
+type = 1
+name = "Beach Biome"
+threshold = 0.46
+place_ore = true
+biome_info = Array[ExtResource("1_g8cj2")]([SubResource("Resource_g8cj2"), SubResource("Resource_xxy4t"), SubResource("Resource_yiiwt")])
+atlas = Vector2i(2, 0)
+biome_atlas = Array[Vector2i]([Vector2i(2, 0), Vector2i(2, 1), Vector2i(5, 0)])
+is_liquid = false
+tile_is_liquid = Array[bool]([false, false, false])
+is_mineable = false
+tile_is_mineable = Array[bool]([true, true, true])
+metadata/_custom_type_script = "uid://bl5usqx6mgiix"

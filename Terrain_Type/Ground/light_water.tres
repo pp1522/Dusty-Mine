@@ -1,0 +1,42 @@
+[gd_resource type="Resource" script_class="TerrainType" format=3 uid="uid://qna52t7qrqw6"]
+
+[ext_resource type="Script" uid="uid://cjs2tv4xbgr4f" path="res://Scripts/Terrain/terrain_info.gd" id="1_bn7g5"]
+[ext_resource type="Script" uid="uid://bl5usqx6mgiix" path="res://Scripts/Terrain/terrain_type.gd" id="1_omnuf"]
+
+[sub_resource type="Resource" id="Resource_rick8"]
+script = ExtResource("1_bn7g5")
+name = "Water"
+threshold = 0.7
+atlas = Vector2i(0, 2)
+tile_is_liquid = true
+metadata/_custom_type_script = "uid://cjs2tv4xbgr4f"
+
+[sub_resource type="Resource" id="Resource_bn7g5"]
+script = ExtResource("1_bn7g5")
+name = "Ice"
+threshold = 0.9
+atlas = Vector2i(3, 1)
+metadata/_custom_type_script = "uid://cjs2tv4xbgr4f"
+
+[sub_resource type="Resource" id="Resource_a5kac"]
+script = ExtResource("1_bn7g5")
+name = "Mystic Water"
+threshold = 1.0
+atlas = Vector2i(0, 1)
+tile_is_liquid = true
+metadata/_custom_type_script = "uid://cjs2tv4xbgr4f"
+
+[resource]
+script = ExtResource("1_omnuf")
+type = 1
+name = "Light Water"
+threshold = 0.38
+place_ore = false
+biome_info = Array[ExtResource("1_bn7g5")]([SubResource("Resource_rick8"), SubResource("Resource_bn7g5"), SubResource("Resource_a5kac")])
+atlas = Vector2i(0, 2)
+biome_atlas = Array[Vector2i]([Vector2i(0, 2), Vector2i(3, 1), Vector2i(0, 2)])
+is_liquid = true
+tile_is_liquid = Array[bool]([true, false, true])
+is_mineable = false
+tile_is_mineable = Array[bool]([false, false, false])
+metadata/_custom_type_script = "uid://bl5usqx6mgiix"

@@ -1,0 +1,43 @@
+[gd_resource type="Resource" script_class="TerrainType" format=3 uid="uid://gxvv5yxi13aa"]
+
+[ext_resource type="Script" uid="uid://cjs2tv4xbgr4f" path="res://Scripts/Terrain/terrain_info.gd" id="1_rqa14"]
+[ext_resource type="Script" uid="uid://bl5usqx6mgiix" path="res://Scripts/Terrain/terrain_type.gd" id="1_xma4h"]
+
+[sub_resource type="Resource" id="Resource_rqa14"]
+script = ExtResource("1_rqa14")
+name = "Grass"
+threshold = 0.5
+metadata/_custom_type_script = "uid://cjs2tv4xbgr4f"
+
+[sub_resource type="Resource" id="Resource_2oim1"]
+script = ExtResource("1_rqa14")
+name = "Stone"
+threshold = 0.7
+atlas = Vector2i(1, 0)
+metadata/_custom_type_script = "uid://cjs2tv4xbgr4f"
+
+[sub_resource type="Resource" id="Resource_3oboo"]
+script = ExtResource("1_rqa14")
+name = "Snow"
+threshold = 0.9
+atlas = Vector2i(3, 0)
+metadata/_custom_type_script = "uid://cjs2tv4xbgr4f"
+
+[sub_resource type="Resource" id="Resource_k7m3d"]
+script = ExtResource("1_rqa14")
+name = "Mystic"
+threshold = 1.0
+atlas = Vector2i(4, 0)
+metadata/_custom_type_script = "uid://cjs2tv4xbgr4f"
+
+[resource]
+script = ExtResource("1_xma4h")
+type = 1
+name = "Plain Biome"
+threshold = 1.0
+place_ore = true
+biome_info = Array[ExtResource("1_rqa14")]([SubResource("Resource_rqa14"), SubResource("Resource_2oim1"), SubResource("Resource_3oboo"), SubResource("Resource_k7m3d")])
+atlas = Vector2i(0, 0)
+is_liquid = false
+is_mineable = false
+metadata/_custom_type_script = "uid://bl5usqx6mgiix"

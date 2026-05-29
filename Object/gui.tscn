@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ct4jgj6ewempq"]
 
 [ext_resource type="Script" uid="uid://em4eb0jnytcu" path="res://Scripts/gui.gd" id="1_cbbba"]
-[ext_resource type="Script" uid="uid://c0g4m2pc3g7bs" path="res://Scripts/building_gui.gd" id="2_xsjf8"]
+[ext_resource type="Script" uid="uid://c0g4m2pc3g7bs" path="res://Scripts/Building/building_gui.gd" id="2_xsjf8"]
 [ext_resource type="Script" uid="uid://x6rcbdr5gv2w" path="res://Scripts/button_type.gd" id="2_yfyb4"]
 [ext_resource type="Texture2D" uid="uid://ccj00ys5tki8p" path="res://Assets/building/belt.png" id="3_ttf4w"]
 [ext_resource type="Texture2D" uid="uid://cswgb6s2m1vu5" path="res://Assets/building/drill.png" id="4_x1ilv"]
@@ -62,7 +62,7 @@ anchor_right = 0.6
 anchor_bottom = 0.1
 grow_horizontal = 2
 script = ExtResource("5_ttf4w")
-resources = Array[Object]([SubResource("Resource_lejmp")])
+resources = Array[ExtResource("7_xsjf8")]([SubResource("Resource_lejmp")])
 
 [node name="ColorRect" type="ColorRect" parent="Items" unique_id=1617730566]
 layout_mode = 1

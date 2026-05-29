@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="TerrainType" format=3 uid="uid://b5i0jgav62v8t"]
+
+[ext_resource type="Script" uid="uid://bl5usqx6mgiix" path="res://Scripts/Terrain/terrain_type.gd" id="1_vghfk"]
+
+[resource]
+script = ExtResource("1_vghfk")
+type = 2
+name = "Coal"
+threshold = 0.2
+place_ore = false
+biome_threshold = Array[float]([])
+atlas = Vector2i(1, 3)
+biome_atlas = Array[Vector2i]([])
+is_liquid = false
+tile_is_liquid = Array[bool]([])
+is_mineable = false
+tile_is_mineable = Array[bool]([])
+metadata/_custom_type_script = "uid://bl5usqx6mgiix"

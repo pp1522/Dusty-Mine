@@ -21,20 +21,15 @@ enum TileType {Height, Biome, Ore}
 
 var place_ore: bool = false
 
-var biome_threshold: Array[float] = []:
+var biome_info: Array[TerrainInfo] = []:
 	set(value):
-		if biome_threshold != value:
-			biome_threshold = value
+		if biome_info != value:
+			biome_info = value
 			emit_changed()
 
 var atlas: Vector2i
-var biome_atlas: Array[Vector2i] = []
-
 var is_liquid: bool = false
-var tile_is_liquid: Array[bool] = []
-
 var is_mineable: bool = false
-var tile_is_mineable: Array[bool] = []
 
 func _get_property_list():
 	var properties = []
@@ -46,9 +41,10 @@ func _get_property_list():
 	})
 
 	properties.append({
-		"name": "biome_threshold",
+		"name": "biome_info",
 		"type": TYPE_ARRAY,
-		"hint_string": "%d/%d:0,1,0.01" % [TYPE_FLOAT, PROPERTY_HINT_RANGE],
+		"hint": PROPERTY_HINT_ARRAY_TYPE,
+		"hint_string": "TerrainInfo",
 		"usage": PROPERTY_USAGE_DEFAULT if type == TileType.Biome else PROPERTY_USAGE_NO_EDITOR
 	})
 
@@ -59,39 +55,15 @@ func _get_property_list():
 	})
 
 	properties.append({
-		"name": "biome_atlas",
-		"type": TYPE_ARRAY,
-		"hint": PROPERTY_HINT_ARRAY_TYPE,
-		"hint_string": "%d/%d:Vector2i" % [TYPE_VECTOR2I, PROPERTY_HINT_NONE],
-		"usage": PROPERTY_USAGE_DEFAULT if type == TileType.Biome else PROPERTY_USAGE_NO_EDITOR
-	})
-
-	properties.append({
 		"name": "is_liquid",
 		"type": TYPE_BOOL,
 		"usage": PROPERTY_USAGE_DEFAULT if type == TileType.Height else PROPERTY_USAGE_NO_EDITOR
 	})
 
 	properties.append({
-		"name": "tile_is_liquid",
-		"type": TYPE_ARRAY,
-		"hint": PROPERTY_HINT_ARRAY_TYPE,
-		"hint_string": "%d/%d:Bool" % [TYPE_BOOL, PROPERTY_HINT_NONE],
-		"usage": PROPERTY_USAGE_DEFAULT if type == TileType.Biome else PROPERTY_USAGE_NO_EDITOR
-	})
-
-	properties.append({
 		"name": "is_mineable",
 		"type": TYPE_BOOL,
 		"usage": PROPERTY_USAGE_DEFAULT if type == TileType.Height else PROPERTY_USAGE_NO_EDITOR
-	})
-
-	properties.append({
-		"name": "tile_is_mineable",
-		"type": TYPE_ARRAY,
-		"hint": PROPERTY_HINT_ARRAY_TYPE,
-		"hint_string": "%d/%d:Bool" % [TYPE_BOOL, PROPERTY_HINT_NONE],
-		"usage": PROPERTY_USAGE_DEFAULT if type == TileType.Biome else PROPERTY_USAGE_NO_EDITOR
 	})
 
 	return properties

@@ -60,8 +60,11 @@ extends Node2D
 @onready var ores_tilemap: TileMapLayer = $Tiles/Ores
 @onready var camera: Camera2D = $Camera2D
 
-var debug = true
+const DEBUG = false
+const RENDER_DISTANCE = 1
+
 var ore_noises: Dictionary = {}
+var biome_noises: Dictionary = {}
 var loaded_chunks: Dictionary = {}
 
 @export_tool_button("Regenerate Map")
@@ -74,12 +77,12 @@ func _process(_delta: float) -> void:
 	var cx:int = floor(camera.position.x / TILE_SIZE.x / chunk_width)
 	var cy:int = floor(camera.position.y / TILE_SIZE.y / chunk_height)
 
-	if debug: init_generator()
+	if DEBUG: init_generator()
 
 	var chunks: Array[Vector2i] = []
 
-	for x in range(-1, 2):
-		for y in range(-1, 2):
+	for x in range(-RENDER_DISTANCE, RENDER_DISTANCE+1):
+		for y in range(-RENDER_DISTANCE, RENDER_DISTANCE+1):
 			var chunk = Vector2i(x+cx, y+cy)
 
 			chunks.append(chunk)
@@ -119,14 +122,16 @@ func init_generator():
 	biome_noise.seed = rng.randi()
 
 	ore_noises.clear()
+	biome_noises.clear()
 
 	for ore in ores_types:
 		if ore == null: continue
+		ore_noises[ore] = create_noise(ore.name, ore_noise)
 
-		var noise := ore_noise.duplicate()
-		noise.seed = hash(str(SEED) + ore.name)
-
-		ore_noises[ore] = noise
+func create_noise(n_name: String, n_original: Noise):
+	var noise: Noise = n_original.duplicate()
+	noise.seed = hash(str(SEED) + n_name)
+	return noise
 
 func generate_chunk(chunk: Vector2i = Vector2i(0, 0)):
 	if liquid_tilemap == null: return
@@ -167,12 +172,10 @@ func place_tile(tile_pos: Vector2i, atlas: Vector2i, is_liquid: bool, is_mineabl
 		tilemap.set_cell(tile_pos, 0, atlas)
 
 func place_biome(tile_pos: Vector2i, biome_value: float, terrain: TerrainType):
-	for i in range(terrain.biome_threshold.size()):
-		if ((biome_value < terrain.biome_threshold[i]) and
-			(i < terrain.biome_atlas.size()) and
-			(i < terrain.tile_is_liquid.size()) and
-			(i < terrain.tile_is_mineable.size())):
-			place_tile(tile_pos, terrain.biome_atlas[i], terrain.tile_is_liquid[i], terrain.tile_is_mineable[i])
+	for i in range(terrain.biome_info.size()):
+		if (terrain.biome_info[i] and
+			(biome_value < terrain.biome_info[i].threshold)):
+			place_tile(tile_pos, terrain.biome_info[i].atlas, terrain.biome_info[i].tile_is_liquid, terrain.biome_info[i].tile_is_mineable)
 			break
 
 func place_ores(tile_pos: Vector2i, px: int, py: int):

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dfp8fbkq2ycns"]
 
 [ext_resource type="Texture2D" uid="uid://cswgb6s2m1vu5" path="res://Assets/building/drill.png" id="1_rcu5d"]
-[ext_resource type="Script" uid="uid://ch4bidpdfke7m" path="res://Scripts/building.gd" id="2_mf003"]
+[ext_resource type="Script" uid="uid://ch4bidpdfke7m" path="res://Scripts/Building/building.gd" id="2_mf003"]
 
 [node name="Sprite2D" type="Sprite2D" unique_id=991361083]
 modulate = Color(1, 1, 1, 0.39215687)
