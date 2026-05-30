@@ -7,7 +7,7 @@ const BUILDING = {
 }
 
 @export var TILE_SIZE: Vector2i = Vector2i(32, 32)
-@export var player: CharacterBody2D
+@export var player: Node2D
 @export var reach: int = 12
 
 @export var liquid_tile: TileMapLayer
@@ -48,12 +48,14 @@ func _process(_delta: float) -> void:
 		set_current_building(select_building)
 
 	for c in queue_builds.get_children():
-		var distance = c.global_position.distance_to(player.global_position)
-		if distance <= reach*TILE_SIZE.x:
-			if c.remove:
-				c.queue_free()
-			else:
-				place_building(c)
+		if player.get_child_count() == 0: return
+		for p in player.get_children():
+			var distance = c.global_position.distance_to(p.player.global_position)
+			if distance <= reach*TILE_SIZE.x:
+				if c.remove:
+					c.queue_free()
+				else:
+					place_building(c)
 
 func update_highlight(newBuilding):
 	if is_valid(newBuilding):
@@ -155,17 +157,18 @@ func remove_queue():
 	var pos = get_global_mouse_position()
 
 	for child in queue_builds.get_children():
-		if child.remove:
-			child.modulate.r = 1.0
-			child.modulate.g = 1.0
-			child.modulate.b = 1.0
+		if child.get_global_rect().has_point(pos):
+			if child.remove:
+				child.modulate.r = 1.0
+				child.modulate.g = 1.0
+				child.modulate.b = 1.0
 
-			child.remove = false
-			child.reparent(place_builds)
-			return
-		elif child.get_global_rect().has_point(pos):
-			child.queue_free()
-			return
+				child.remove = false
+				child.reparent(place_builds)
+				return
+			else:
+				child.queue_free()
+				return
 
 	for child in place_builds.get_children():
 		if child.get_global_rect().has_point(pos):

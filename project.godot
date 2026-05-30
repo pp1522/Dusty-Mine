@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="Dusty Mine"
-run/main_scene="uid://cxj5yidqp0frs"
+run/main_scene="uid://bybw6rphpr3nk"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+NetworkHandler="*uid://dqcw81d3gmkc8"
 
 [input]
 

@@ -2,6 +2,7 @@
 extends Node2D
 
 
+@export var player: Node2D
 @export var TILE_SIZE: Vector2i = Vector2i(32, 32)
 @export var chunk_width = 32
 @export var chunk_height = 32
@@ -54,14 +55,13 @@ extends Node2D
 
 			gen_helper()
 
-@onready var liquid_tilemap: TileMapLayer = $Tiles/Liquid
-@onready var tilemap: TileMapLayer = $Tiles/Ground
-@onready var mineable_tilemap: TileMapLayer = $Tiles/Ground_Mineable
-@onready var ores_tilemap: TileMapLayer = $Tiles/Ores
-@onready var camera: Camera2D = $Camera2D
+@onready var liquid_tilemap: TileMapLayer = $Liquid
+@onready var tilemap: TileMapLayer = $Ground
+@onready var mineable_tilemap: TileMapLayer = $Ground_Mineable
+@onready var ores_tilemap: TileMapLayer = $Ores
 
-const DEBUG = false
 const RENDER_DISTANCE = 1
+const DEBUG_RENDER_DISTANCE = 5
 
 var ore_noises: Dictionary = {}
 var biome_noises: Dictionary = {}
@@ -74,24 +74,25 @@ func _ready() -> void:
 	init_generator()
 
 func _process(_delta: float) -> void:
-	var cx:int = floor(camera.position.x / TILE_SIZE.x / chunk_width)
-	var cy:int = floor(camera.position.y / TILE_SIZE.y / chunk_height)
-
-	if DEBUG: init_generator()
+	if player.get_child_count() == 0: return
 
 	var chunks: Array[Vector2i] = []
 
-	for x in range(-RENDER_DISTANCE, RENDER_DISTANCE+1):
-		for y in range(-RENDER_DISTANCE, RENDER_DISTANCE+1):
-			var chunk = Vector2i(x+cx, y+cy)
+	for c in player.get_children():
+		var cx:int = floor(c.camera.position.x / TILE_SIZE.x / chunk_width)
+		var cy:int = floor(c.camera.position.y / TILE_SIZE.y / chunk_height)
 
-			chunks.append(chunk)
+		for x in range(-RENDER_DISTANCE, RENDER_DISTANCE+1):
+			for y in range(-RENDER_DISTANCE, RENDER_DISTANCE+1):
+				var chunk = Vector2i(x+cx, y+cy)
 
-			if loaded_chunks.has(chunk):
-				continue
-			else:
-				generate_chunk(chunk)
-				loaded_chunks[chunk] = true
+				chunks.append(chunk)
+
+				if loaded_chunks.has(chunk):
+					continue
+				else:
+					generate_chunk(chunk)
+					loaded_chunks[chunk] = true
 
 	for c in loaded_chunks.keys():
 		if !chunks.has(c):
@@ -100,7 +101,11 @@ func _process(_delta: float) -> void:
 
 func gen_helper():
 	init_generator()
-	generate_chunk()
+
+	for x in range(-DEBUG_RENDER_DISTANCE, DEBUG_RENDER_DISTANCE+1):
+		for y in range(-DEBUG_RENDER_DISTANCE, DEBUG_RENDER_DISTANCE+1):
+			var chunk = Vector2i(x, y)
+			generate_chunk(chunk)
 
 func init_generator():
 	if liquid_tilemap == null: return

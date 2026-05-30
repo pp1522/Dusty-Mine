@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://bukrqhgu4cdkb"]
+
+[ext_resource type="Script" uid="uid://ps4v0yelmx6g" path="res://Scripts/Network/network_player.gd" id="1_tgbuy"]
+[ext_resource type="Script" uid="uid://bl4amrlr3bref" path="res://Scripts/Network/network_input_sync.gd" id="2_dfkc3"]
+[ext_resource type="PackedScene" uid="uid://boy6m6rovo382" path="res://Object/player_object.tscn" id="2_g26ot"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_g26ot"]
+properties/0/path = NodePath(".:player_id")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("PlayerBody:position")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("PlayerBody:rotation")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath("Camera2D:position")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath("Camera2D:zoom")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_jy0hj"]
+properties/0/path = NodePath("InputSynchronizer:input_dir")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("InputSynchronizer:zoom_in")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("InputSynchronizer:zoom_out")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+
+[node name="Network_Player" type="Node2D" unique_id=1803041978 node_paths=PackedStringArray("camera", "player")]
+script = ExtResource("1_tgbuy")
+camera = NodePath("Camera2D")
+player = NodePath("PlayerBody")
+
+[node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=831743379]
+replication_config = SubResource("SceneReplicationConfig_g26ot")
+
+[node name="InputSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1615583055]
+unique_name_in_owner = true
+replication_config = SubResource("SceneReplicationConfig_jy0hj")
+script = ExtResource("2_dfkc3")
+
+[node name="PlayerBody" parent="." unique_id=90566542 instance=ExtResource("2_g26ot")]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=122107174]

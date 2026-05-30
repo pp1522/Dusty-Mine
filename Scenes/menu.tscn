@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://bybw6rphpr3nk"]
+
+[ext_resource type="Script" uid="uid://b3d5ljv872gww" path="res://Scripts/Network/network_ui.gd" id="1_1rerr"]
+
+[node name="Menu" type="Node2D" unique_id=1340085087]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=525447435]
+
+[node name="Control" type="Control" parent="CanvasLayer" unique_id=829728971]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="Button" type="Control" parent="CanvasLayer/Control" unique_id=1758244388]
+layout_mode = 1
+anchor_left = 0.4
+anchor_top = 0.4
+anchor_right = 0.6
+anchor_bottom = 0.6
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1rerr")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/Button" unique_id=620901777]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="single_player" type="Button" parent="CanvasLayer/Control/Button/VBoxContainer" unique_id=1835691573]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Single Player"
+
+[node name="host" type="Button" parent="CanvasLayer/Control/Button/VBoxContainer" unique_id=452599089]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Host Server"
+
+[node name="join" type="Button" parent="CanvasLayer/Control/Button/VBoxContainer" unique_id=1957522772]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Join Server"
+
+[connection signal="pressed" from="CanvasLayer/Control/Button/VBoxContainer/single_player" to="CanvasLayer/Control/Button" method="_on_single_player_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/Button/VBoxContainer/host" to="CanvasLayer/Control/Button" method="_on_host_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/Button/VBoxContainer/join" to="CanvasLayer/Control/Button" method="_on_join_pressed"]
