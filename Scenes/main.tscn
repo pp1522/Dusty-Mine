@@ -69,7 +69,7 @@ place_builds = NodePath("../../Building/Place")
 
 [node name="Gui" parent="CanvasLayer" unique_id=2009881913 instance=ExtResource("7_6bp64")]
 
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=2090650060]
+[node name="PlayerSpawner" type="MultiplayerSpawner" parent="." unique_id=2090650060]
 _spawnable_scenes = PackedStringArray("uid://bukrqhgu4cdkb")
 spawn_path = NodePath("../Player")
 

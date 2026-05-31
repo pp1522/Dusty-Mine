@@ -2,6 +2,7 @@ extends Control
 
 
 func _on_single_player_pressed() -> void:
+	NetworkHandler.single = true
 	get_tree().change_scene_to_file("res://Scenes/main.tscn")
 
 func _on_host_pressed() -> void:

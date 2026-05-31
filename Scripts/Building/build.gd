@@ -140,18 +140,60 @@ func is_valid(newBuilding: Sprite2D):
 
 func queue_building():
 	if not is_valid(current_building): return
-	current_building.modulate.r = 1.0
-	current_building.modulate.g = 1.0
-	current_building.modulate.b = 1.0
 
-	current_building.reparent(queue_builds)
-	snap(current_building, get_global_mouse_position())
+	if NetworkHandler.single:
+		place_local(current_building, get_global_mouse_position(), current_rotation)
+	else:
+		if multiplayer.is_server():
+			check_place(select_building, current_building.global_position, current_rotation)
+		else:
+			check_place.rpc_id(1, select_building, current_building.global_position, current_rotation)
+		current_building.queue_free()
+
 	current_building = null
 
 func place_building(building: Sprite2D):
 	building.reparent(place_builds)
 	snap(building, building.global_position)
 	building.place()
+
+func place_local(cur_building: Sprite2D, build_pos: Vector2, build_rotation: float):
+	cur_building.modulate.r = 1.0
+	cur_building.modulate.g = 1.0
+	cur_building.modulate.b = 1.0
+
+	cur_building.building_rotate(build_rotation)
+
+	cur_building.reparent(queue_builds)
+	snap(cur_building, build_pos)
+
+@rpc("any_peer", "reliable")
+func check_place(cur_building: String, build_pos: Vector2, build_rotation: float):
+	if !multiplayer.is_server(): return
+
+	var building: Sprite2D = BUILDING[cur_building].instantiate()
+	add_child(building)
+	snap(building, build_pos)
+	building.building_rotate(build_rotation)
+
+	if !is_valid(building):
+		building.queue_free()
+		return
+
+	building.queue_free()
+	spawn_build.rpc(cur_building, build_pos, build_rotation)
+
+@rpc("authority", "reliable", "call_local")
+func spawn_build(cur_building: String, build_pos: Vector2, build_rotation: float):
+	var building: Sprite2D = BUILDING[cur_building].instantiate()
+	queue_builds.add_child(building)
+	snap(building, build_pos)
+
+	building.modulate.r = 1.0
+	building.modulate.g = 1.0
+	building.modulate.b = 1.0
+
+	building.building_rotate(build_rotation)
 
 func remove_queue():
 	var pos = get_global_mouse_position()

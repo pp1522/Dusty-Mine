@@ -6,3 +6,5 @@ func _ready() -> void:
 		NetworkHandler.start_server()
 	elif NetworkHandler.join:
 		NetworkHandler.start_client()
+	elif NetworkHandler.single:
+		NetworkHandler.start_single()

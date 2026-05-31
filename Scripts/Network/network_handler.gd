@@ -8,7 +8,14 @@ const PORT: int = 34580
 var network_player = preload("res://Object/network_player.tscn")
 var host: bool = false
 var join: bool = false
+var single: bool = false
 var players_node: Node2D
+
+func start_single() -> void:
+	print("Single Player!")
+
+	var single_peer = OfflineMultiplayerPeer.new()
+	multiplayer.multiplayer_peer = single_peer
 
 func start_server() -> void:
 	print("Host!")
