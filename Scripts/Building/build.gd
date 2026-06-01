@@ -15,8 +15,10 @@ const BUILDING = {
 @export var mineable_ground_tile: TileMapLayer
 @export var ore_tile: TileMapLayer
 
-@onready var place_builds: Node2D = $Place
-@onready var queue_builds: Node2D = $Queue
+@export var spawner: MultiplayerSpawner
+
+@onready var build_preview: Node2D = $BuildPreview
+@onready var build_global: Node2D = $Build
 
 var select_building: String = ""
 var current_building: Sprite2D
@@ -24,6 +26,12 @@ var old_pos: Vector2
 var building_object: PackedScene
 var current_rotation: float = 0.0
 
+func _ready() -> void:
+	if NetworkHandler.single:
+		spawner.queue_free()
+	else:
+		spawner.add_spawnable_scene("res://Object/building/drill.tscn")
+		spawner.add_spawnable_scene("res://Object/building/belt.tscn")
 
 func _input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("place") and current_building:
@@ -35,7 +43,7 @@ func _input(_event: InputEvent) -> void:
 		select_building = ""
 
 	elif Input.is_action_just_pressed("remove"):
-		remove_queue()
+		queue_remove()
 
 	elif Input.is_action_just_pressed("rotate") and current_building:
 		current_rotation = wrapf(current_rotation+90.0, 0.0, 360.0)
@@ -47,14 +55,14 @@ func _process(_delta: float) -> void:
 	elif select_building:
 		set_current_building(select_building)
 
-	for c in queue_builds.get_children():
+	for c in build_global.get_children():
 		if player.get_child_count() == 0: return
 		for p in player.get_children():
 			var distance = c.global_position.distance_to(p.player.global_position)
 			if distance <= reach*TILE_SIZE.x:
 				if c.remove:
 					c.queue_free()
-				else:
+				elif c.queue:
 					place_building(c)
 
 func update_highlight(newBuilding):
@@ -98,13 +106,9 @@ func get_cover(newBuilding):
 func is_valid(newBuilding: Sprite2D):
 	var intersects = []
 
-	# building
-	for child in place_builds.get_children():
-		if child.get_global_rect().intersects(newBuilding.get_global_rect()):
-			intersects.append(child)
+	for child in build_global.get_children():
+		if child == newBuilding: continue
 
-	# queue
-	for child in queue_builds.get_children():
 		if child.get_global_rect().intersects(newBuilding.get_global_rect()):
 			intersects.append(child)
 
@@ -132,7 +136,6 @@ func is_valid(newBuilding: Sprite2D):
 		if newBuilding.require_place_on_ore and ground_tile_data:
 			ore_cover += 1
 
-
 	if newBuilding.require_place_on_ore and ore_cover == 0:
 		return false
 
@@ -142,84 +145,80 @@ func queue_building():
 	if not is_valid(current_building): return
 
 	if NetworkHandler.single:
-		place_local(current_building, get_global_mouse_position(), current_rotation)
+		local_place_queue(current_building, current_rotation)
 	else:
 		if multiplayer.is_server():
-			check_place(select_building, current_building.global_position, current_rotation)
+			online_place(select_building, current_building.global_position, current_rotation)
 		else:
-			check_place.rpc_id(1, select_building, current_building.global_position, current_rotation)
+			online_place.rpc_id(1, select_building, current_building.global_position, current_rotation)
 		current_building.queue_free()
 
 	current_building = null
 
+func queue_remove():
+	if NetworkHandler.single:
+		local_remove_queue(get_global_mouse_position())
+	else:
+		if multiplayer.is_server():
+			online_remove(get_global_mouse_position())
+		else:
+			online_remove.rpc_id(1, get_global_mouse_position())
+
 func place_building(building: Sprite2D):
-	building.reparent(place_builds)
 	snap(building, building.global_position)
-	building.place()
-
-func place_local(cur_building: Sprite2D, build_pos: Vector2, build_rotation: float):
-	cur_building.modulate.r = 1.0
-	cur_building.modulate.g = 1.0
-	cur_building.modulate.b = 1.0
-
-	cur_building.building_rotate(build_rotation)
-
-	cur_building.reparent(queue_builds)
-	snap(cur_building, build_pos)
+	building.set_place()
 
 @rpc("any_peer", "reliable")
-func check_place(cur_building: String, build_pos: Vector2, build_rotation: float):
+func online_place(cur_building: String, build_pos: Vector2, build_rotation: float):
 	if !multiplayer.is_server(): return
 
 	var building: Sprite2D = BUILDING[cur_building].instantiate()
-	add_child(building)
-	snap(building, build_pos)
+	building.set_sync(true)
 	building.building_rotate(build_rotation)
+	snap(building, build_pos)
+
+	build_global.add_child(building, true)
 
 	if !is_valid(building):
 		building.queue_free()
 		return
 
-	building.queue_free()
-	spawn_build.rpc(cur_building, build_pos, build_rotation)
+	building.set_queue()
 
-@rpc("authority", "reliable", "call_local")
-func spawn_build(cur_building: String, build_pos: Vector2, build_rotation: float):
-	var building: Sprite2D = BUILDING[cur_building].instantiate()
-	queue_builds.add_child(building)
-	snap(building, build_pos)
+@rpc("any_peer", "reliable")
+func online_remove(building_pos: Vector2):
+	if !multiplayer.is_server(): return
 
-	building.modulate.r = 1.0
-	building.modulate.g = 1.0
-	building.modulate.b = 1.0
-
-	building.building_rotate(build_rotation)
-
-func remove_queue():
-	var pos = get_global_mouse_position()
-
-	for child in queue_builds.get_children():
-		if child.get_global_rect().has_point(pos):
-			if child.remove:
-				child.modulate.r = 1.0
-				child.modulate.g = 1.0
-				child.modulate.b = 1.0
-
-				child.remove = false
-				child.reparent(place_builds)
-				return
-			else:
+	for child in build_global.get_children():
+		if child.get_global_rect().has_point(building_pos):
+			if child.queue:
 				child.queue_free()
 				return
+			else:
+				if child.remove:
+					child.set_place()
+					child.remove = false
+				else:
+					child.set_remove()
 
-	for child in place_builds.get_children():
-		if child.get_global_rect().has_point(pos):
-			child.modulate.r = 1.0
-			child.modulate.g = 0.0
-			child.modulate.b = 0.0
+func local_place_queue(building: Sprite2D, build_rotation: float):
+	building.reparent(build_global)
+	building.building_rotate(build_rotation)
+	snap(building, building.global_position)
+	building.set_queue()
 
-			child.remove = true
-			child.reparent(queue_builds)
+func local_remove_queue(building_pos: Vector2):
+	for child in build_global.get_children():
+		if child.get_global_rect().has_point(building_pos):
+			if child.queue:
+				child.queue_free()
+				return
+			else:
+				if child.remove:
+					child.set_place()
+					child.remove = false
+				else:
+					child.set_remove()
 
 func set_current_building(build: String):
 	if current_building:
@@ -233,7 +232,9 @@ func set_current_building(build: String):
 	newBuilding.modulate.g = 0.0
 	newBuilding.modulate.b = 0.0
 
-	add_child(newBuilding)
+	newBuilding.set_sync(false)
+
+	build_preview.add_child(newBuilding)
 	snap(newBuilding, get_global_mouse_position())
 	update_highlight(newBuilding)
 	current_building.building_rotate(current_rotation)

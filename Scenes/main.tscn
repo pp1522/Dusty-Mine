@@ -48,22 +48,26 @@ tile_set = ExtResource("5_kry3j")
 tile_map_data = PackedByteArray("AADn/x8AAAABAAEAAADo/x0AAAABAAEAAADp/xwAAAABAAEAAADp/x0AAAABAAEAAADp/x4AAAABAAEAAADq/xwAAAABAAEAAADq/x0AAAABAAEAAADq/x4AAAABAAEAAAD4/w8AAAABAAMAAAD4/xAAAAABAAMAAAD5/w8AAAABAAMAAAD5/xAAAAABAAMAAAD5/xIAAAABAAMAAAD5/xMAAAABAAMAAAD6/xAAAAABAAMAAAD6/xEAAAABAAMAAAD6/xIAAAABAAMAAAD6/xMAAAABAAMAAADk/ycAAAABAAEAAADm/yAAAAABAAEAAADm/yEAAAABAAEAAADn/yAAAAABAAEAAAAQAPH/AAABAAMAAAARAPH/AAABAAMAAAARAPL/AAABAAMAAAARAPP/AAABAAMAAAASAPH/AAABAAMAAAASAPL/AAABAAMAAAASAPP/AAABAAIAAAASAPT/AAABAAIAAAASAPX/AAABAAIAAAATAPL/AAABAAIAAAATAPP/AAABAAIAAAATAPT/AAABAAIAAAAUAPL/AAABAAIAAAAUAPP/AAABAAIAAAAYAOD/AAABAAIAAAAYAOH/AAABAAIAAAAZAOD/AAABAAIAAAAZAOH/AAABAAIAAAAaAOD/AAABAAIAAAAGACcAAAABAAIAAAA=")
 tile_set = ExtResource("5_kry3j")
 
-[node name="Building" type="Node2D" parent="." unique_id=31921302 node_paths=PackedStringArray("player", "liquid_tile", "ground_tile", "mineable_ground_tile", "ore_tile")]
+[node name="Building" type="Node2D" parent="." unique_id=31921302 node_paths=PackedStringArray("player", "liquid_tile", "ground_tile", "mineable_ground_tile", "ore_tile", "spawner")]
 script = ExtResource("5_21xkr")
 player = NodePath("../Player")
 liquid_tile = NodePath("../Tiles/Liquid")
 ground_tile = NodePath("../Tiles/Ground")
 mineable_ground_tile = NodePath("../Tiles/Ground_Mineable")
 ore_tile = NodePath("../Tiles/Ores")
+spawner = NodePath("BuildingSpawner")
 
-[node name="Place" type="Node2D" parent="Building" unique_id=1112267668]
+[node name="BuildingSpawner" type="MultiplayerSpawner" parent="Building" unique_id=869571271]
+spawn_path = NodePath("../Build")
 
-[node name="Queue" type="Node2D" parent="Building" unique_id=344419137]
+[node name="BuildPreview" type="Node2D" parent="Building" unique_id=1034685735]
+
+[node name="Build" type="Node2D" parent="Building" unique_id=2071743244]
 
 [node name="Player" type="Node2D" parent="." unique_id=938649005]
 
 [node name="PlayerSingle" parent="Player" unique_id=1308833832 node_paths=PackedStringArray("place_builds") instance=ExtResource("3_jjvhh")]
-place_builds = NodePath("../../Building/Place")
+place_builds = NodePath("../../Building/Build")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=17001104]
 

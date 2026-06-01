@@ -3,12 +3,27 @@
 [ext_resource type="Texture2D" uid="uid://ccj00ys5tki8p" path="res://Assets/building/belt.png" id="1_6165b"]
 [ext_resource type="Script" uid="uid://ch4bidpdfke7m" path="res://Scripts/Building/building.gd" id="2_d3vnb"]
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_6165b"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:modulate")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+
 [node name="Sprite2D" type="Sprite2D" unique_id=991361083]
 modulate = Color(1, 1, 1, 0.39215687)
 texture = ExtResource("1_6165b")
 script = ExtResource("2_d3vnb")
 rect = Rect2(0, 0, 32, 32)
 can_rotate = true
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=156201305]
+process_mode = 4
+replication_config = SubResource("SceneReplicationConfig_6165b")
 
 [node name="Control" type="Control" parent="." unique_id=62329648]
 visible = false

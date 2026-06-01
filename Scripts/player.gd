@@ -42,5 +42,5 @@ func _input(_event: InputEvent) -> void:
 		var pos = get_global_mouse_position()
 
 		for child in place_builds.get_children():
-			if child.get_global_rect().has_point(pos):
+			if child.place and child.get_global_rect().has_point(pos):
 				child.toggle_item()
