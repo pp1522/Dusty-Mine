@@ -2,6 +2,7 @@ extends Sprite2D
 
 
 @export var rect: Rect2
+@export var build_type: String
 
 @export var build_speed: int = 10
 @export var can_rotate: bool = false
@@ -10,9 +11,13 @@ extends Sprite2D
 @export var can_place_on_liquid: bool = false
 @export var require_place_on_ore: bool = false
 
+@export var properties: BuildProperties
+
 @onready var ui: Control = $Control
 
 var item: Array[ResourceType] = []
+var data: Dictionary = {}
+
 var place: bool = false
 var queue: bool = false
 var remove: bool = false

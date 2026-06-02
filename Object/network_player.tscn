@@ -33,6 +33,7 @@ properties/2/spawn = true
 properties/2/replication_mode = 1
 
 [node name="Network_Player" type="Node2D" unique_id=1803041978 node_paths=PackedStringArray("camera", "player")]
+z_index = 2
 script = ExtResource("1_tgbuy")
 camera = NodePath("Camera2D")
 player = NodePath("PlayerBody")

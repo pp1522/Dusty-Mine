@@ -20,6 +20,8 @@ const BUILDING = {
 @onready var build_preview: Node2D = $BuildPreview
 @onready var build_global: Node2D = $Build
 
+@export var ores_data: Array[OreType] = []
+
 var select_building: String = ""
 var current_building: Sprite2D
 var old_pos: Vector2
@@ -177,6 +179,7 @@ func online_place(cur_building: String, build_pos: Vector2, build_rotation: floa
 	building.building_rotate(build_rotation)
 	snap(building, build_pos)
 
+	update_building(building)
 	build_global.add_child(building, true)
 
 	if !is_valid(building):
@@ -205,6 +208,7 @@ func local_place_queue(building: Sprite2D, build_rotation: float):
 	building.reparent(build_global)
 	building.building_rotate(build_rotation)
 	snap(building, building.global_position)
+	update_building(building)
 	building.set_queue()
 
 func local_remove_queue(building_pos: Vector2):
@@ -238,6 +242,41 @@ func set_current_building(build: String):
 	snap(newBuilding, get_global_mouse_position())
 	update_highlight(newBuilding)
 	current_building.building_rotate(current_rotation)
+
+func update_building(building: Sprite2D):
+	if building.build_type == "drill":
+		if ores_data.size() == 0: return
+		var cover = get_cover(building)
+		var ore_cover: Dictionary = {}
+
+		for t in cover:
+			var ore_tile_coord = ore_tile.get_cell_atlas_coords(t)
+			var ground_tile_coord = mineable_ground_tile.get_cell_atlas_coords(t)
+
+			if ore_tile_coord:
+				for i in ores_data:
+					if i.is_ore_tile and i.atlas == ore_tile_coord:
+						if !ore_cover.has(i.ore.name):
+							ore_cover[i.ore.name] = [0, i.ore]
+						ore_cover[i.ore.name][0] += 1
+						break
+
+			if ground_tile_coord:
+				for i in ores_data:
+					if i.is_ground_tile and i.atlas == ground_tile_coord:
+						if !ore_cover.has(i.ore.name):
+							ore_cover[i.ore.name] = [0, i.ore]
+						ore_cover[i.ore.name][0] += 1
+						break
+
+		var max_ore: ResourceType
+		var max_count: int = 0
+		for ore in ore_cover:
+			if ore_cover[ore][0] > max_count:
+				max_count = ore_cover[ore][0]
+				max_ore = ore_cover[ore][1]
+
+		building.data["Ore"] = max_ore
 
 func _on_gui_building_select(building: String) -> void:
 	if BUILDING.has(building):

@@ -19,6 +19,22 @@
 [ext_resource type="Resource" uid="uid://d0pemm4nagc63" path="res://Terrain_Type/Ores/copper.tres" id="12_u50mg"]
 [ext_resource type="Resource" uid="uid://djqfdlxpdklhp" path="res://Terrain_Type/Ores/iron.tres" id="13_cbgmd"]
 [ext_resource type="Resource" uid="uid://b5i0jgav62v8t" path="res://Terrain_Type/Ores/coal.tres" id="14_1w6v2"]
+[ext_resource type="Script" uid="uid://b8n3aib0ip8va" path="res://Scripts/ore_type.gd" id="18_hibaj"]
+[ext_resource type="Texture2D" uid="uid://chk0h05gkqcq" path="res://Assets/items/copper_ingot.png" id="19_ee4r6"]
+[ext_resource type="Script" uid="uid://2y2rfvvrddfp" path="res://Scripts/resource_type.gd" id="20_gt3je"]
+
+[sub_resource type="Resource" id="Resource_3pmx8"]
+script = ExtResource("20_gt3je")
+name = "Copper"
+image = ExtResource("19_ee4r6")
+metadata/_custom_type_script = "uid://2y2rfvvrddfp"
+
+[sub_resource type="Resource" id="Resource_pdsj5"]
+script = ExtResource("18_hibaj")
+ore = SubResource("Resource_3pmx8")
+atlas = Vector2i(1, 1)
+is_ore_tile = true
+metadata/_custom_type_script = "uid://b8n3aib0ip8va"
 
 [node name="Main" type="Node2D" unique_id=1290030476]
 script = ExtResource("1_fevyy")
@@ -56,6 +72,7 @@ ground_tile = NodePath("../Tiles/Ground")
 mineable_ground_tile = NodePath("../Tiles/Ground_Mineable")
 ore_tile = NodePath("../Tiles/Ores")
 spawner = NodePath("BuildingSpawner")
+ores_data = Array[ExtResource("18_hibaj")]([SubResource("Resource_pdsj5")])
 
 [node name="BuildingSpawner" type="MultiplayerSpawner" parent="Building" unique_id=869571271]
 spawn_path = NodePath("../Build")
@@ -65,6 +82,7 @@ spawn_path = NodePath("../Build")
 [node name="Build" type="Node2D" parent="Building" unique_id=2071743244]
 
 [node name="Player" type="Node2D" parent="." unique_id=938649005]
+z_index = 2
 
 [node name="PlayerSingle" parent="Player" unique_id=1308833832 node_paths=PackedStringArray("place_builds") instance=ExtResource("3_jjvhh")]
 place_builds = NodePath("../../Building/Build")

@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://boy6m6rovo382" path="res://Object/player_object.tscn" id="2_a1t8t"]
 
 [node name="Player" type="Node2D" unique_id=1308833832 node_paths=PackedStringArray("camera", "player")]
+z_index = 2
 script = ExtResource("1_kwdud")
 camera = NodePath("Camera2D")
 player = NodePath("PlayerBody")

@@ -2,6 +2,14 @@
 
 [ext_resource type="Texture2D" uid="uid://ccj00ys5tki8p" path="res://Assets/building/belt.png" id="1_6165b"]
 [ext_resource type="Script" uid="uid://ch4bidpdfke7m" path="res://Scripts/Building/building.gd" id="2_d3vnb"]
+[ext_resource type="Script" uid="uid://byere5iwfufuu" path="res://Scripts/Building/build_properties.gd" id="3_d3vnb"]
+
+[sub_resource type="Resource" id="Resource_n7kbc"]
+script = ExtResource("3_d3vnb")
+type = "belt"
+speed = 50
+storage = 3
+metadata/_custom_type_script = "uid://byere5iwfufuu"
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_6165b"]
 properties/0/path = NodePath(".:position")
@@ -19,24 +27,26 @@ modulate = Color(1, 1, 1, 0.39215687)
 texture = ExtResource("1_6165b")
 script = ExtResource("2_d3vnb")
 rect = Rect2(0, 0, 32, 32)
+build_type = "belt"
 can_rotate = true
+properties = SubResource("Resource_n7kbc")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=156201305]
 process_mode = 4
 replication_config = SubResource("SceneReplicationConfig_6165b")
 
-[node name="Control" type="Control" parent="." unique_id=62329648]
+[node name="Control" type="Control" parent="." unique_id=1071698896]
 visible = false
+z_index = 1
 layout_mode = 3
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -32.0
-offset_top = -64.0
-offset_right = -32.0
-offset_bottom = -64.0
+anchor_left = -0.5
+anchor_top = -1.0
+anchor_right = 0.5
+anchor_bottom = -0.5
 grow_horizontal = 2
+grow_vertical = 0
 
-[node name="ColorRect" type="ColorRect" parent="Control" unique_id=1663345032]
+[node name="ColorRect" type="ColorRect" parent="Control" unique_id=48774481]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
