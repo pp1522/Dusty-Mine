@@ -1,7 +1,8 @@
 extends Node2D
 
 
-@onready var building: Node2D = $Building/Build
+@onready var building: Building = $Building
+@onready var builds: Node2D = $Building/Build
 
 func _ready() -> void:
 	if NetworkHandler.host:
@@ -12,7 +13,7 @@ func _ready() -> void:
 		NetworkHandler.start_single()
 
 func _process(_delta: float) -> void:
-	for child in building.get_children():
+	for child in builds.get_children():
 		if !(child.place and !child.remove): return
 		if child.build_type == "drill":
 			if child.properties.type != "drill": return
@@ -26,3 +27,20 @@ func _process(_delta: float) -> void:
 					child.item.append(child.data["Ore"])
 
 				child.data["tick"] = 0
+
+func get_building_around(cur_pos: Vector2i):
+	var builds: Array[Sprite2D] = []
+
+	var dirs = [
+		Vector2i.UP,
+		Vector2i.DOWN,
+		Vector2i.LEFT,
+		Vector2i.RIGHT
+	]
+
+	for d in dirs:
+		var pos = cur_pos+d
+		if building.building_tile.has(pos):
+			builds.append(building.building_tile[pos])
+
+	return builds

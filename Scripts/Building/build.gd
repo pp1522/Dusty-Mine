@@ -1,3 +1,4 @@
+class_name Building
 extends Node2D
 
 
@@ -22,11 +23,15 @@ const BUILDING = {
 
 @export var ores_data: Array[OreType] = []
 
+var debug: bool = false
+
 var select_building: String = ""
 var current_building: Sprite2D
 var old_pos: Vector2
 var building_object: PackedScene
 var current_rotation: float = 0.0
+
+var building_tile: Dictionary = {}
 
 func _ready() -> void:
 	if NetworkHandler.single:
@@ -105,6 +110,27 @@ func get_cover(newBuilding):
 
 	return tiles
 
+func add_building_tile(building: Sprite2D):
+	var cover = get_cover(building)
+	for t in cover:
+		building_tile[t] = building.build_type
+
+		var dbg_rect = ReferenceRect.new()
+		dbg_rect.position = Vector2(t.x*TILE_SIZE.x, t.y*TILE_SIZE.y)
+		dbg_rect.size = TILE_SIZE
+		dbg_rect.editor_only = false
+		add_child(dbg_rect, true)
+
+		var dbg_label = Label.new()
+		dbg_label.position = Vector2(t.x*TILE_SIZE.x, t.y*TILE_SIZE.y)
+		dbg_label.text = building.build_type
+		add_child(dbg_label, true)
+
+func remove_building_tile(building: Sprite2D):
+	var cover = get_cover(building)
+	for t in cover:
+		building_tile.erase(t)
+
 func is_valid(newBuilding: Sprite2D):
 	var intersects = []
 
@@ -169,6 +195,7 @@ func queue_remove():
 func place_building(building: Sprite2D):
 	snap(building, building.global_position)
 	building.set_place()
+	add_building_tile(building)
 
 @rpc("any_peer", "reliable")
 func online_place(cur_building: String, build_pos: Vector2, build_rotation: float):
@@ -199,9 +226,11 @@ func online_remove(building_pos: Vector2):
 				return
 			else:
 				if child.remove:
+					add_building_tile(child)
 					child.set_place()
 					child.remove = false
 				else:
+					remove_building_tile(child)
 					child.set_remove()
 
 func local_place_queue(building: Sprite2D, build_rotation: float):
@@ -219,9 +248,11 @@ func local_remove_queue(building_pos: Vector2):
 				return
 			else:
 				if child.remove:
+					add_building_tile(child)
 					child.set_place()
 					child.remove = false
 				else:
+					remove_building_tile(child)
 					child.set_remove()
 
 func set_current_building(build: String):
