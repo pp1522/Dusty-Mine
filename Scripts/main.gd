@@ -28,8 +28,18 @@ func _process(_delta: float) -> void:
 
 				child.data["tick"] = 0
 
+				var cover = building.get_cover(child)
+				for t in cover:
+					var build_arround = get_building_around(t)
+					for b in build_arround:
+						if child.item.size() == 0: break
+						if b.build_type == "belt":
+							if b.item.size() >= b.properties.storage: continue
+							b.item.append(child.item[0])
+							child.item.remove_at(0)
+
 func get_building_around(cur_pos: Vector2i):
-	var builds: Array[Sprite2D] = []
+	var builds_array: Array[Sprite2D] = []
 
 	var dirs = [
 		Vector2i.UP,
@@ -41,6 +51,6 @@ func get_building_around(cur_pos: Vector2i):
 	for d in dirs:
 		var pos = cur_pos+d
 		if building.building_tile.has(pos):
-			builds.append(building.building_tile[pos])
+			builds_array.append(building.building_tile[pos])
 
-	return builds
+	return builds_array

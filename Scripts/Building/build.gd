@@ -113,7 +113,7 @@ func get_cover(newBuilding):
 func add_building_tile(building: Sprite2D):
 	var cover = get_cover(building)
 	for t in cover:
-		building_tile[t] = building.build_type
+		building_tile[t] = building
 
 		var dbg_rect = ReferenceRect.new()
 		dbg_rect.position = Vector2(t.x*TILE_SIZE.x, t.y*TILE_SIZE.y)
@@ -308,6 +308,10 @@ func update_building(building: Sprite2D):
 				max_ore = ore_cover[ore][1]
 
 		building.data["Ore"] = max_ore
+	elif building.build_type == "belt":
+		# Ngl I have to focus on this more :3 and not space engineer.
+		# It's fun tho.
+		pass
 
 func _on_gui_building_select(building: String) -> void:
 	if BUILDING.has(building):
