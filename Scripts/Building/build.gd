@@ -169,6 +169,35 @@ func is_valid(newBuilding: Sprite2D):
 
 	return true
 
+func get_building_around(cur_pos: Vector2i):
+	var builds_array: Array[Sprite2D] = []
+
+	var dirs = [
+		Vector2i.UP,
+		Vector2i.DOWN,
+		Vector2i.LEFT,
+		Vector2i.RIGHT
+	]
+
+	for d in dirs:
+		var pos = cur_pos+d
+		if building_tile.has(pos):
+			builds_array.append(building_tile[pos])
+
+	return builds_array
+
+func get_building_rotation(building: Sprite2D):
+	var rot = rad_to_deg(building.global_rotation)
+
+	if rot > -1.0 and rot < 1.0:
+		return Vector2i.UP
+	elif rot > -1.0:
+		return Vector2i.RIGHT
+	elif rot > -91.0:
+		return Vector2i.LEFT
+
+	return Vector2i.DOWN
+
 func queue_building():
 	if not is_valid(current_building): return
 
@@ -194,6 +223,7 @@ func queue_remove():
 
 func place_building(building: Sprite2D):
 	snap(building, building.global_position)
+	update_building(building)
 	building.set_place()
 	add_building_tile(building)
 
@@ -206,7 +236,6 @@ func online_place(cur_building: String, build_pos: Vector2, build_rotation: floa
 	building.building_rotate(build_rotation)
 	snap(building, build_pos)
 
-	update_building(building)
 	build_global.add_child(building, true)
 
 	if !is_valid(building):
@@ -237,7 +266,6 @@ func local_place_queue(building: Sprite2D, build_rotation: float):
 	building.reparent(build_global)
 	building.building_rotate(build_rotation)
 	snap(building, building.global_position)
-	update_building(building)
 	building.set_queue()
 
 func local_remove_queue(building_pos: Vector2):
@@ -309,9 +337,27 @@ func update_building(building: Sprite2D):
 
 		building.data["Ore"] = max_ore
 	elif building.build_type == "belt":
-		# Ngl I have to focus on this more :3 and not space engineer.
-		# It's fun tho.
-		pass
+		building.data["Belt_Target"] = []
+
+		var cover = get_cover(building)
+		for t in cover:
+			var build_arround = get_building_around(t)
+
+			for b in build_arround:
+				if b != building:
+					var check_pos = get_building_rotation(b)*-1+t
+					if !building_tile.has(check_pos): continue
+					if building_tile[check_pos] != b: continue
+
+					if !b.data.has("Belt_Target"): # HOW?!?
+						b.data["Belt_Target"] = []
+					b.data["Belt_Target"].append(building)
+
+			var pos = t + get_building_rotation(building)
+			if building_tile.has(pos):
+				if building_tile[pos].data.has("Belt_Target"):
+					building_tile[pos].data["Belt_Target"].erase(building)
+				building.data["Belt_Target"].append(building_tile[pos])
 
 func _on_gui_building_select(building: String) -> void:
 	if BUILDING.has(building):

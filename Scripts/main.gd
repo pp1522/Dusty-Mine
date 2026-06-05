@@ -20,17 +20,16 @@ func _process(_delta: float) -> void:
 			if !child.data.has("tick"): child.data["tick"] = 0
 			child.data["tick"] += 1
 
-			if child.data["tick"] == child.properties.speed:
+			if child.data["tick"] >= child.properties.speed:
+				child.data["tick"] = 0
 				if (child.data["Ore"] and
 					child.item.size() < child.properties.storage
 				):
 					child.item.append(child.data["Ore"])
 
-				child.data["tick"] = 0
-
 				var cover = building.get_cover(child)
 				for t in cover:
-					var build_arround = get_building_around(t)
+					var build_arround = building.get_building_around(t)
 					for b in build_arround:
 						if child.item.size() == 0: break
 						if b.build_type == "belt":
@@ -38,19 +37,25 @@ func _process(_delta: float) -> void:
 							b.item.append(child.item[0])
 							child.item.remove_at(0)
 
-func get_building_around(cur_pos: Vector2i):
-	var builds_array: Array[Sprite2D] = []
+		elif child.build_type == "belt":
+			if !child.data.has("Belt_Target"): return
+			if child.data["Belt_Target"].size() == 0: return
 
-	var dirs = [
-		Vector2i.UP,
-		Vector2i.DOWN,
-		Vector2i.LEFT,
-		Vector2i.RIGHT
-	]
+			if !child.data.has("tick"): child.data["tick"] = 0
+			child.data["tick"] += 1
 
-	for d in dirs:
-		var pos = cur_pos+d
-		if building.building_tile.has(pos):
-			builds_array.append(building.building_tile[pos])
+			for b in child.data["Belt_Target"]:
+				if !is_instance_valid(b):
+					child.data["Belt_Target"].erase(b)
+					return
 
-	return builds_array
+				if child.data["tick"] >= child.properties.speed:
+					child.data["tick"] = 0
+
+					if (child.item.size() == 0 or
+						b.item.size() >= b.properties.storage
+					):
+						return
+
+					b.item.append(child.item[0])
+					child.item.remove_at(0)
