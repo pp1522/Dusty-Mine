@@ -50,6 +50,9 @@ func _add_player(id: int):
 
 	players_node.add_child(new_player, true)
 
+	var building = get_tree().current_scene.get_node("Building")
+	new_player.get_inventory_data.connect(building._on_player_single_get_inventory_data)
+
 func _remove_player(id: int):
 	if not players_node.has_node(str(id)): return
 	players_node.get_node(str(id)).queue_free()

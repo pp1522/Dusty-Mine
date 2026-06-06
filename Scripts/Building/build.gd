@@ -367,3 +367,13 @@ func _on_gui_building_select(building: String) -> void:
 		if current_building:
 			current_building.queue_free()
 			current_building = null
+
+func _on_player_single_get_inventory_data(pos: Vector2) -> void:
+	# BUG: Delay Multiplayer a bit so it not show inv when place.
+	var tile_pos = ground_tile.local_to_map(ground_tile.to_local(pos))
+	var building = building_tile.get(tile_pos)
+
+	if !building: return
+
+	if building.place and building.get_global_rect().has_point(pos):
+		building.toggle_item()

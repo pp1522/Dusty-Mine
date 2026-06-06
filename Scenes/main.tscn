@@ -84,8 +84,7 @@ spawn_path = NodePath("../Build")
 [node name="Player" type="Node2D" parent="." unique_id=938649005]
 z_index = 2
 
-[node name="PlayerSingle" parent="Player" unique_id=1308833832 node_paths=PackedStringArray("place_builds") instance=ExtResource("3_jjvhh")]
-place_builds = NodePath("../../Building/Build")
+[node name="PlayerSingle" parent="Player" unique_id=1308833832 instance=ExtResource("3_jjvhh")]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=17001104]
 
@@ -95,4 +94,5 @@ place_builds = NodePath("../../Building/Build")
 _spawnable_scenes = PackedStringArray("uid://bukrqhgu4cdkb")
 spawn_path = NodePath("../Player")
 
+[connection signal="get_inventory_data" from="Player/PlayerSingle" to="Building" method="_on_player_single_get_inventory_data"]
 [connection signal="building_select" from="CanvasLayer/Gui" to="Building" method="_on_gui_building_select"]

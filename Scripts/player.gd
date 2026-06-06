@@ -1,6 +1,8 @@
 extends Node2D
 
 
+signal get_inventory_data(pos: Vector2)
+
 @export var speed: int = 10
 @export var player_speed: int = 250
 @export var player_radius: int = 10
@@ -11,7 +13,6 @@ extends Node2D
 
 @export var camera: Camera2D
 @export var player: CharacterBody2D
-@export var place_builds: Node2D
 
 var vel = Vector2.ZERO
 
@@ -40,7 +41,4 @@ func _input(_event: InputEvent) -> void:
 
 	if Input.is_action_just_pressed("place"):
 		var pos = get_global_mouse_position()
-
-		for child in place_builds.get_children():
-			if child.place and child.get_global_rect().has_point(pos):
-				child.toggle_item()
+		get_inventory_data.emit(pos)

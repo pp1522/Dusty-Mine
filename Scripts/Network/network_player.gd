@@ -1,6 +1,8 @@
 extends Node2D
 
 
+signal get_inventory_data(pos: Vector2)
+
 @export var speed: int = 10
 @export var player_speed: int = 250
 @export var player_radius: int = 10
@@ -47,3 +49,10 @@ func _physics_process(_delta: float) -> void:
 		player.look_at(camera.position)
 		if player.position.distance_to(camera.position) > player_radius:
 			player.move_and_slide()
+
+func mouse_click():
+	request_inventory.rpc_id(1, get_global_mouse_position())
+
+@rpc("any_peer", "call_local", "reliable")
+func request_inventory(pos: Vector2) -> void:
+	get_inventory_data.emit(pos)
