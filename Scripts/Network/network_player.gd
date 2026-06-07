@@ -1,3 +1,4 @@
+class_name NetworkPlayer
 extends Node2D
 
 

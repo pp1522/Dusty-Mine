@@ -1,4 +1,4 @@
-class_name Building
+class_name Build
 extends Node2D
 
 
@@ -26,7 +26,7 @@ const BUILDING = {
 var debug: bool = false
 
 var select_building: String = ""
-var current_building: Sprite2D
+var current_building: Building
 var old_pos: Vector2
 var building_object: PackedScene
 var current_rotation: float = 0.0
@@ -80,7 +80,7 @@ func update_highlight(newBuilding):
 		newBuilding.modulate.r = 1.0
 		newBuilding.modulate.g = 0.0
 
-func snap(newBuilding: Sprite2D, pos: Vector2):
+func snap(newBuilding: Building, pos: Vector2):
 	newBuilding.global_position = pos - TILE_SIZE/2.0
 
 	var offset = Vector2(0, 0)
@@ -110,7 +110,7 @@ func get_cover(newBuilding):
 
 	return tiles
 
-func add_building_tile(building: Sprite2D):
+func add_building_tile(building: Building):
 	var cover = get_cover(building)
 	for t in cover:
 		building_tile[t] = building
@@ -126,12 +126,12 @@ func add_building_tile(building: Sprite2D):
 		dbg_label.text = building.build_type
 		add_child(dbg_label, true)
 
-func remove_building_tile(building: Sprite2D):
+func remove_building_tile(building: Building):
 	var cover = get_cover(building)
 	for t in cover:
 		building_tile.erase(t)
 
-func is_valid(newBuilding: Sprite2D):
+func is_valid(newBuilding: Building):
 	var intersects = []
 
 	for child in build_global.get_children():
@@ -170,7 +170,7 @@ func is_valid(newBuilding: Sprite2D):
 	return true
 
 func get_building_around(cur_pos: Vector2i):
-	var builds_array: Array[Sprite2D] = []
+	var builds_array: Array[Building] = []
 
 	var dirs = [
 		Vector2i.UP,
@@ -186,7 +186,7 @@ func get_building_around(cur_pos: Vector2i):
 
 	return builds_array
 
-func get_building_rotation(building: Sprite2D):
+func get_building_rotation(building: Building):
 	var rot = rad_to_deg(building.global_rotation)
 
 	if rot > -1.0 and rot < 1.0:
@@ -221,7 +221,7 @@ func queue_remove():
 		else:
 			online_remove.rpc_id(1, get_global_mouse_position())
 
-func place_building(building: Sprite2D):
+func place_building(building: Building):
 	snap(building, building.global_position)
 	update_building(building)
 	building.set_place()
@@ -231,7 +231,7 @@ func place_building(building: Sprite2D):
 func online_place(cur_building: String, build_pos: Vector2, build_rotation: float):
 	if !multiplayer.is_server(): return
 
-	var building: Sprite2D = BUILDING[cur_building].instantiate()
+	var building: Building = BUILDING[cur_building].instantiate()
 	building.set_sync(true)
 	building.building_rotate(build_rotation)
 	snap(building, build_pos)
@@ -262,7 +262,7 @@ func online_remove(building_pos: Vector2):
 					remove_building_tile(child)
 					child.set_remove()
 
-func local_place_queue(building: Sprite2D, build_rotation: float):
+func local_place_queue(building: Building, build_rotation: float):
 	building.reparent(build_global)
 	building.building_rotate(build_rotation)
 	snap(building, building.global_position)
@@ -302,7 +302,7 @@ func set_current_building(build: String):
 	update_highlight(newBuilding)
 	current_building.building_rotate(current_rotation)
 
-func update_building(building: Sprite2D):
+func update_building(building: Building):
 	if building.build_type == "drill":
 		if ores_data.size() == 0: return
 		var cover = get_cover(building)

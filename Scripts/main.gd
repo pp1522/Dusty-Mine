@@ -1,8 +1,10 @@
 extends Node2D
 
 
-@onready var building: Building = $Building
+@onready var building: Build = $Building
 @onready var builds: Node2D = $Building/Build
+
+@onready var terrain: TerrainGen = $Tiles
 
 func _ready() -> void:
 	if NetworkHandler.host:

@@ -1,3 +1,4 @@
+class_name SinglePlayer
 extends Node2D
 
 

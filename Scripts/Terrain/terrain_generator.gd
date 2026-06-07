@@ -1,4 +1,5 @@
 @tool
+class_name TerrainGen
 extends Node2D
 
 
