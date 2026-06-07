@@ -115,16 +115,17 @@ func add_building_tile(building: Building):
 	for t in cover:
 		building_tile[t] = building
 
-		var dbg_rect = ReferenceRect.new()
-		dbg_rect.position = Vector2(t.x*TILE_SIZE.x, t.y*TILE_SIZE.y)
-		dbg_rect.size = TILE_SIZE
-		dbg_rect.editor_only = false
-		add_child(dbg_rect, true)
+		if debug:
+			var dbg_rect = ReferenceRect.new()
+			dbg_rect.position = Vector2(t.x*TILE_SIZE.x, t.y*TILE_SIZE.y)
+			dbg_rect.size = TILE_SIZE
+			dbg_rect.editor_only = false
+			add_child(dbg_rect, true)
 
-		var dbg_label = Label.new()
-		dbg_label.position = Vector2(t.x*TILE_SIZE.x, t.y*TILE_SIZE.y)
-		dbg_label.text = building.build_type
-		add_child(dbg_label, true)
+			var dbg_label = Label.new()
+			dbg_label.position = Vector2(t.x*TILE_SIZE.x, t.y*TILE_SIZE.y)
+			dbg_label.text = building.build_type
+			add_child(dbg_label, true)
 
 func remove_building_tile(building: Building):
 	var cover = get_cover(building)
@@ -314,7 +315,10 @@ func update_building(building: Building):
 
 			if ore_tile_coord:
 				for i in ores_data:
-					if i.is_ore_tile and i.atlas == ore_tile_coord:
+					if (i.is_ore_tile and
+						i.atlas == ore_tile_coord and
+						i.hardness_require <= building.properties.drill_hardness
+					):
 						if !ore_cover.has(i.ore.name):
 							ore_cover[i.ore.name] = [0, i.ore]
 						ore_cover[i.ore.name][0] += 1
@@ -322,7 +326,10 @@ func update_building(building: Building):
 
 			if ground_tile_coord:
 				for i in ores_data:
-					if i.is_ground_tile and i.atlas == ground_tile_coord:
+					if (i.is_ground_tile and
+						i.atlas == ground_tile_coord and
+						i.hardness_require <= building.properties.drill_hardness
+					):
 						if !ore_cover.has(i.ore.name):
 							ore_cover[i.ore.name] = [0, i.ore]
 						ore_cover[i.ore.name][0] += 1
@@ -368,7 +375,7 @@ func _on_gui_building_select(building: String) -> void:
 			current_building.queue_free()
 			current_building = null
 
-func _on_player_single_get_inventory_data(pos: Vector2) -> void:
+func _on_player_click_event(pos: Vector2) -> void:
 	# BUG: Delay Multiplayer a bit so it not show inv when place.
 	var tile_pos = ground_tile.local_to_map(ground_tile.to_local(pos))
 	var building = building_tile.get(tile_pos)

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="OreType" format=3 uid="uid://d0188dvx0pcaj"]
+
+[ext_resource type="Texture2D" uid="uid://b0olabqnssbej" path="res://Assets/items/sand.png" id="1_ftsy1"]
+[ext_resource type="Script" uid="uid://2y2rfvvrddfp" path="res://Scripts/resource_type.gd" id="2_xld3u"]
+[ext_resource type="Script" uid="uid://b8n3aib0ip8va" path="res://Scripts/ore_type.gd" id="3_lwmrc"]
+
+[sub_resource type="Resource" id="Resource_fu53x"]
+script = ExtResource("2_xld3u")
+name = "Sand"
+image = ExtResource("1_ftsy1")
+metadata/_custom_type_script = "uid://2y2rfvvrddfp"
+
+[resource]
+script = ExtResource("3_lwmrc")
+ore = SubResource("Resource_fu53x")
+atlas = Vector2i(2, 0)
+is_ground_tile = true
+hardness_require = 1
+metadata/_custom_type_script = "uid://b8n3aib0ip8va"

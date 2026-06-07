@@ -2,7 +2,7 @@ class_name NetworkPlayer
 extends Node2D
 
 
-signal get_inventory_data(pos: Vector2)
+signal click_event(pos: Vector2)
 
 @export var speed: int = 10
 @export var player_speed: int = 250
@@ -56,4 +56,4 @@ func mouse_click():
 
 @rpc("any_peer", "call_local", "reliable")
 func request_inventory(pos: Vector2) -> void:
-	get_inventory_data.emit(pos)
+	click_event.emit(pos)

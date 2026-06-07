@@ -62,7 +62,7 @@ extends Node2D
 @onready var ores_tilemap: TileMapLayer = $Ores
 
 const RENDER_DISTANCE = 1
-const DEBUG_RENDER_DISTANCE = 5
+const DEBUG_RENDER_DISTANCE = 1
 
 var ore_noises: Dictionary = {}
 var biome_noises: Dictionary = {}

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="TerrainType" format=3 uid="uid://daam328amwxh5"]
+
+[ext_resource type="Script" uid="uid://cjs2tv4xbgr4f" path="res://Scripts/Terrain/terrain_info.gd" id="1_ellla"]
+[ext_resource type="Script" uid="uid://bl5usqx6mgiix" path="res://Scripts/Terrain/terrain_type.gd" id="2_wq35a"]
+
+[resource]
+script = ExtResource("2_wq35a")
+type = 2
+name = "Uranium"
+threshold = 0.15
+place_ore = false
+biome_info = Array[ExtResource("1_ellla")]([])
+atlas = Vector2i(1, 5)
+is_liquid = false
+is_mineable = false
+metadata/_custom_type_script = "uid://bl5usqx6mgiix"

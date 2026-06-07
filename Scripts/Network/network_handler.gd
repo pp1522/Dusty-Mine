@@ -51,7 +51,7 @@ func _add_player(id: int):
 	players_node.add_child(new_player, true)
 
 	var building = get_tree().current_scene.get_node("Building")
-	new_player.get_inventory_data.connect(building._on_player_single_get_inventory_data)
+	new_player.click_event.connect(building._on_player_click_event)
 
 func _remove_player(id: int):
 	if not players_node.has_node(str(id)): return

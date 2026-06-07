@@ -2,7 +2,7 @@ class_name SinglePlayer
 extends Node2D
 
 
-signal get_inventory_data(pos: Vector2)
+signal click_event(pos: Vector2)
 
 @export var speed: int = 10
 @export var player_speed: int = 250
@@ -42,4 +42,4 @@ func _input(_event: InputEvent) -> void:
 
 	if Input.is_action_just_pressed("place"):
 		var pos = get_global_mouse_position()
-		get_inventory_data.emit(pos)
+		click_event.emit(pos)
