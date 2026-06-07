@@ -22,8 +22,12 @@
 [ext_resource type="Resource" uid="uid://bbrwlbcrdriyv" path="res://Terrain_Type/Ores/tin.tres" id="16_3pmx8"]
 [ext_resource type="Resource" uid="uid://daam328amwxh5" path="res://Terrain_Type/Ores/uranium.tres" id="17_u50mg"]
 [ext_resource type="Script" uid="uid://b8n3aib0ip8va" path="res://Scripts/ore_type.gd" id="18_hibaj"]
+[ext_resource type="PackedScene" uid="uid://dfp8fbkq2ycns" path="res://Object/building/drill.tscn" id="20_ueoa1"]
+[ext_resource type="PackedScene" uid="uid://ddjth2chkl413" path="res://Object/building/belt.tscn" id="21_6vcvc"]
 [ext_resource type="Resource" uid="uid://bkkx5tddqbq0a" path="res://Terrain_Type/Ores_Data/copper.tres" id="21_cbgmd"]
 [ext_resource type="Resource" uid="uid://5op2hpcfbkv2" path="res://Terrain_Type/Ores_Data/iron.tres" id="22_1w6v2"]
+[ext_resource type="PackedScene" uid="uid://dmjsjrmus53id" path="res://Object/building/barrel.tscn" id="22_6vcvc"]
+[ext_resource type="PackedScene" uid="uid://cn055g1bjv4iu" path="res://Object/building/vault.tscn" id="23_7k868"]
 [ext_resource type="Resource" uid="uid://cerpympwmnj1h" path="res://Terrain_Type/Ores_Data/coal.tres" id="23_ueoa1"]
 [ext_resource type="Resource" uid="uid://d0188dvx0pcaj" path="res://Terrain_Type/Ores_Data/sand.tres" id="24_6vcvc"]
 
@@ -57,6 +61,12 @@ tile_set = ExtResource("5_kry3j")
 
 [node name="Building" type="Node2D" parent="." unique_id=31921302 node_paths=PackedStringArray("player", "liquid_tile", "ground_tile", "mineable_ground_tile", "ore_tile", "spawner")]
 script = ExtResource("5_21xkr")
+BUILDING = Dictionary[String, Resource]({
+"barrel": ExtResource("22_6vcvc"),
+"belt": ExtResource("21_6vcvc"),
+"drill": ExtResource("20_ueoa1"),
+"vault": ExtResource("23_7k868")
+})
 player = NodePath("../Player")
 liquid_tile = NodePath("../Tiles/Liquid")
 ground_tile = NodePath("../Tiles/Ground")

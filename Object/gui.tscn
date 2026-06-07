@@ -6,7 +6,9 @@
 [ext_resource type="Texture2D" uid="uid://ccj00ys5tki8p" path="res://Assets/building/belt.png" id="3_ttf4w"]
 [ext_resource type="Texture2D" uid="uid://cswgb6s2m1vu5" path="res://Assets/building/drill.png" id="4_x1ilv"]
 [ext_resource type="Script" uid="uid://bhb7tfy0i18pw" path="res://Scripts/inventory.gd" id="5_ttf4w"]
+[ext_resource type="Texture2D" uid="uid://brg8tpjcnivq8" path="res://Assets/building/barrel.png" id="6_6ng3o"]
 [ext_resource type="Texture2D" uid="uid://chk0h05gkqcq" path="res://Assets/items/copper_ingot.png" id="6_mdw2k"]
+[ext_resource type="Texture2D" uid="uid://by34c5a65stnj" path="res://Assets/building/vault.png" id="7_p3hxs"]
 [ext_resource type="Script" uid="uid://2y2rfvvrddfp" path="res://Scripts/resource_type.gd" id="7_xsjf8"]
 
 [sub_resource type="Resource" id="Resource_yfyb4"]
@@ -20,6 +22,20 @@ script = ExtResource("2_yfyb4")
 name = "drill"
 image = ExtResource("4_x1ilv")
 size = Vector2i(2, 2)
+metadata/_custom_type_script = "uid://x6rcbdr5gv2w"
+
+[sub_resource type="Resource" id="Resource_0wwjd"]
+script = ExtResource("2_yfyb4")
+name = "barrel"
+image = ExtResource("6_6ng3o")
+size = Vector2i(2, 2)
+metadata/_custom_type_script = "uid://x6rcbdr5gv2w"
+
+[sub_resource type="Resource" id="Resource_qfdjt"]
+script = ExtResource("2_yfyb4")
+name = "vault"
+image = ExtResource("7_p3hxs")
+size = Vector2i(3, 3)
 metadata/_custom_type_script = "uid://x6rcbdr5gv2w"
 
 [sub_resource type="Resource" id="Resource_lejmp"]
@@ -44,7 +60,11 @@ anchor_top = 0.6
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("2_xsjf8")
-button = Array[ExtResource("2_yfyb4")]([SubResource("Resource_yfyb4"), SubResource("Resource_ttf4w")])
+button = Array[ExtResource("2_yfyb4")]([SubResource("Resource_yfyb4"), SubResource("Resource_ttf4w"), SubResource("Resource_0wwjd"), SubResource("Resource_qfdjt")])
+button_grid = Vector2i(2, 4)
+button_size = null
+button_scale = null
+button_offset = null
 
 [node name="ColorRect" type="ColorRect" parent="Building" unique_id=560173485]
 layout_mode = 1

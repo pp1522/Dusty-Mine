@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://cn055g1bjv4iu"]
+
+[ext_resource type="Texture2D" uid="uid://by34c5a65stnj" path="res://Assets/building/vault.png" id="1_m5hbs"]
+[ext_resource type="Script" uid="uid://ch4bidpdfke7m" path="res://Scripts/Building/building.gd" id="2_y30r7"]
+[ext_resource type="Script" uid="uid://byere5iwfufuu" path="res://Scripts/Building/build_properties.gd" id="3_bglpm"]
+[ext_resource type="PackedScene" uid="uid://ba8nv0vfoxffw" path="res://Object/building/building_gui.tscn" id="4_ke7i7"]
+
+[sub_resource type="Resource" id="Resource_a1ha5"]
+script = ExtResource("3_bglpm")
+type = "storage"
+storage = 8000
+metadata/_custom_type_script = "uid://byere5iwfufuu"
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_rcu5d"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:modulate")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+
+[node name="Sprite2D" type="Sprite2D" unique_id=991361083]
+modulate = Color(1, 1, 1, 0.39215687)
+texture = ExtResource("1_m5hbs")
+script = ExtResource("2_y30r7")
+rect = Rect2(0, 0, 96, 96)
+build_type = "vault"
+properties = SubResource("Resource_a1ha5")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=532260858]
+process_mode = 4
+replication_config = SubResource("SceneReplicationConfig_rcu5d")
+
+[node name="Control" parent="." unique_id=54836198 instance=ExtResource("4_ke7i7")]

@@ -15,6 +15,7 @@ extends Sprite2D
 @export var properties: BuildProperties
 
 @onready var ui: Control = $Control
+@onready var item_ui: Control = $Control/Items
 
 var item: Array[ResourceType] = []
 var data: Dictionary = {}
@@ -67,5 +68,14 @@ func building_rotate(deg: float):
 func toggle_item():
 	if ui.visible:
 		ui.visible = false
+
+		for i in item_ui.get_children():
+			i.queue_free()
 	else:
 		ui.visible = true
+
+		for i: ResourceType in item:
+			var item_image: TextureRect = TextureRect.new()
+			item_image.texture = i.image
+
+			item_ui.add_child(item_image)

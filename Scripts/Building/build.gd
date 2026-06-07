@@ -2,10 +2,7 @@ class_name Build
 extends Node2D
 
 
-const BUILDING = {
-	"drill": preload("res://Object/building/drill.tscn"),
-	"belt": preload("res://Object/building/belt.tscn")
-}
+@export var BUILDING: Dictionary[String, Resource] = {}
 
 @export var TILE_SIZE: Vector2i = Vector2i(32, 32)
 @export var player: Node2D
@@ -31,7 +28,7 @@ var old_pos: Vector2
 var building_object: PackedScene
 var current_rotation: float = 0.0
 
-var building_tile: Dictionary = {}
+var building_tile: Dictionary[Vector2i, Building] = {}
 
 func _ready() -> void:
 	if NetworkHandler.single:
@@ -224,9 +221,9 @@ func queue_remove():
 
 func place_building(building: Building):
 	snap(building, building.global_position)
+	add_building_tile(building)
 	update_building(building)
 	building.set_place()
-	add_building_tile(building)
 
 @rpc("any_peer", "reliable")
 func online_place(cur_building: String, build_pos: Vector2, build_rotation: float):
@@ -303,6 +300,32 @@ func set_current_building(build: String):
 	update_highlight(newBuilding)
 	current_building.building_rotate(current_rotation)
 
+func update_belt(belt: Building):
+	belt.data["Belt_Target"] = []
+
+	var cover = get_cover(belt)
+	for t in cover:
+		var build_arround = get_building_around(t)
+
+		# Make belt around insert item to this belt.
+		for b in build_arround:
+			if b == belt: continue
+			if b.properties.type != "belt": continue
+
+			var check_pos = get_building_rotation(b)*-1+t
+			if !building_tile.has(check_pos): continue
+			if building_tile[check_pos] != b: continue
+
+			b.data["Belt_Target"].append(belt)
+
+		# Remove belt ahead to target and target that betl/storage.
+		var pos = t + get_building_rotation(belt)
+		if building_tile.has(pos):
+			if building_tile[pos].data.has("Belt_Target"):
+				building_tile[pos].data["Belt_Target"].erase(belt)
+			if !building_tile[pos].properties.can_insert_item: continue
+			belt.data["Belt_Target"].append(building_tile[pos])
+
 func update_building(building: Building):
 	if building.build_type == "drill":
 		if ores_data.size() == 0: return
@@ -344,27 +367,14 @@ func update_building(building: Building):
 
 		building.data["Ore"] = max_ore
 	elif building.build_type == "belt":
-		building.data["Belt_Target"] = []
-
+		update_belt(building)
+	elif building.properties.can_insert_item:
 		var cover = get_cover(building)
 		for t in cover:
 			var build_arround = get_building_around(t)
-
 			for b in build_arround:
-				if b != building:
-					var check_pos = get_building_rotation(b)*-1+t
-					if !building_tile.has(check_pos): continue
-					if building_tile[check_pos] != b: continue
-
-					if !b.data.has("Belt_Target"): # HOW?!?
-						b.data["Belt_Target"] = []
-					b.data["Belt_Target"].append(building)
-
-			var pos = t + get_building_rotation(building)
-			if building_tile.has(pos):
-				if building_tile[pos].data.has("Belt_Target"):
-					building_tile[pos].data["Belt_Target"].erase(building)
-				building.data["Belt_Target"].append(building_tile[pos])
+				if b.build_type == "belt":
+					update_belt(b)
 
 func _on_gui_building_select(building: String) -> void:
 	if BUILDING.has(building):

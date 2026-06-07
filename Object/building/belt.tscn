@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://ccj00ys5tki8p" path="res://Assets/building/belt.png" id="1_6165b"]
 [ext_resource type="Script" uid="uid://ch4bidpdfke7m" path="res://Scripts/Building/building.gd" id="2_d3vnb"]
 [ext_resource type="Script" uid="uid://byere5iwfufuu" path="res://Scripts/Building/build_properties.gd" id="3_d3vnb"]
+[ext_resource type="PackedScene" uid="uid://ba8nv0vfoxffw" path="res://Object/building/building_gui.tscn" id="4_n7kbc"]
 
 [sub_resource type="Resource" id="Resource_n7kbc"]
 script = ExtResource("3_d3vnb")
@@ -35,22 +36,4 @@ properties = SubResource("Resource_n7kbc")
 process_mode = 4
 replication_config = SubResource("SceneReplicationConfig_6165b")
 
-[node name="Control" type="Control" parent="." unique_id=1071698896]
-visible = false
-z_index = 1
-layout_mode = 3
-anchor_left = -0.5
-anchor_top = -1.0
-anchor_right = 0.5
-anchor_bottom = -0.5
-grow_horizontal = 2
-grow_vertical = 0
-
-[node name="ColorRect" type="ColorRect" parent="Control" unique_id=48774481]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 0.39215687)
+[node name="Control" parent="." unique_id=54836198 instance=ExtResource("4_n7kbc")]
