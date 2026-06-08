@@ -89,7 +89,8 @@ z_index = 2
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=17001104]
 
-[node name="Gui" parent="CanvasLayer" unique_id=2009881913 instance=ExtResource("7_6bp64")]
+[node name="Gui" parent="CanvasLayer" unique_id=2009881913 node_paths=PackedStringArray("terrain_gen") instance=ExtResource("7_6bp64")]
+terrain_gen = NodePath("../../Tiles")
 
 [node name="PlayerSpawner" type="MultiplayerSpawner" parent="." unique_id=2090650060]
 _spawnable_scenes = PackedStringArray("uid://bukrqhgu4cdkb")

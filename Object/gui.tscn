@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://chk0h05gkqcq" path="res://Assets/items/copper_ingot.png" id="6_mdw2k"]
 [ext_resource type="Texture2D" uid="uid://by34c5a65stnj" path="res://Assets/building/vault.png" id="7_p3hxs"]
 [ext_resource type="Script" uid="uid://2y2rfvvrddfp" path="res://Scripts/resource_type.gd" id="7_xsjf8"]
+[ext_resource type="Script" uid="uid://0pkwohdikd7m" path="res://Scripts/mini_map.gd" id="11_p3hxs"]
 
 [sub_resource type="Resource" id="Resource_yfyb4"]
 script = ExtResource("2_yfyb4")
@@ -61,7 +62,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("2_xsjf8")
 button = Array[ExtResource("2_yfyb4")]([SubResource("Resource_yfyb4"), SubResource("Resource_ttf4w"), SubResource("Resource_0wwjd"), SubResource("Resource_qfdjt")])
-button_grid = Vector2i(2, 4)
 button_size = null
 button_scale = null
 button_offset = null
@@ -92,5 +92,34 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.39215687)
+
+[node name="MiniMap" type="Control" parent="." unique_id=1318208265]
+layout_mode = 1
+anchor_left = 0.75
+anchor_right = 1.0
+anchor_bottom = 0.35
+grow_horizontal = 0
+script = ExtResource("11_p3hxs")
+
+[node name="ColorRect" type="ColorRect" parent="MiniMap" unique_id=719569765]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.39215687)
+
+[node name="Map" type="TextureRect" parent="MiniMap" unique_id=1681244200]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [connection signal="select" from="Building" to="." method="_on_building_select"]
