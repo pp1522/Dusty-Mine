@@ -34,9 +34,10 @@
 [node name="Main" type="Node2D" unique_id=1290030476]
 script = ExtResource("1_fevyy")
 
-[node name="Tiles" type="Node2D" parent="." unique_id=371086218 node_paths=PackedStringArray("player")]
+[node name="Tiles" type="Node2D" parent="." unique_id=371086218 node_paths=PackedStringArray("player", "gui")]
 script = ExtResource("1_bo1nx")
 player = NodePath("../Player")
+gui = NodePath("../CanvasLayer/Gui")
 height_noise = ExtResource("2_6bp64")
 biome_noise = ExtResource("3_ynf5e")
 ore_noise = ExtResource("4_hptm8")

@@ -4,6 +4,7 @@ extends Node2D
 
 
 @export var player: Node2D
+@export var gui: Gui
 @export var TILE_SIZE: Vector2i = Vector2i(32, 32)
 @export var chunk_width = 32
 @export var chunk_height = 32
@@ -169,12 +170,17 @@ func generate_chunk(chunk: Vector2i = Vector2i(0, 0)):
 
 					break
 
+	gui.minimap.update_minimap()
+
 func place_tile(tile_pos: Vector2i, atlas: Vector2i, is_liquid: bool, is_mineable: bool):
 	if is_liquid:
+		gui.minimap.update_minimap_tile(tile_pos, Color.BLUE)
 		liquid_tilemap.set_cell(tile_pos, 0, atlas)
 	elif is_mineable:
+		gui.minimap.update_minimap_tile(tile_pos, Color.RED)
 		mineable_tilemap.set_cell(tile_pos, 0, atlas)
 	else:
+		gui.minimap.update_minimap_tile(tile_pos, Color.GREEN)
 		tilemap.set_cell(tile_pos, 0, atlas)
 
 func place_biome(tile_pos: Vector2i, biome_value: float, terrain: TerrainType):

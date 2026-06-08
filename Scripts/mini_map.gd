@@ -2,33 +2,31 @@ class_name MiniMap
 extends Control
 
 
+@export var map_size: Vector2i = Vector2i(512, 256)
+
 @onready var map: TextureRect = $Map
 
 var terrain_gen: TerrainGen
 
-func gen_minimap():
-	map.texture = gen_minimap_texture(Vector2i(256, 256))
+var minimap_image: Image
+var minimap_texture: ImageTexture
 
-func gen_minimap_texture(map_size: Vector2i) -> ImageTexture:
-	var image = Image.create(map_size.x, map_size.y, false, Image.FORMAT_RGBA8)
+func init_minimap():
+	minimap_image = Image.create(map_size.x, map_size.y, false, Image.FORMAT_RGBA8)
+	minimap_texture = ImageTexture.create_from_image(minimap_image)
 
-	for x in range(map_size.x):
-		for y in range(map_size.y):
-			var noise_value = terrain_gen.height_noise.get_noise_2d(x, y)
-			noise_value = (noise_value + 1) / 2
+	map.texture = minimap_texture
 
-			var color = Color.BLACK
+func update_minimap_tile(tile_pos: Vector2i, color: Color):
+	var center = Vector2i(int(map_size.x/2.0), int(map_size.y/2.0))
 
-			for terrain in terrain_gen.terrain_types:
-				if terrain and noise_value < terrain.threshold:
-					if terrain.is_liquid:
-						color = Color.BLUE
-					elif terrain.is_mineable:
-						color = Color.YELLOW
-					else:
-						color = Color.GREEN
-					break
+	var map_pos = center + tile_pos
+	if (map_pos.x >= 0 and
+		map_pos.y >= 0 and
+		map_pos.x < minimap_image.get_width() and
+		map_pos.y < minimap_image.get_height()
+	):
+		minimap_image.set_pixel(map_pos.x, map_pos.y, color)
 
-			image.set_pixel(x, y, color)
-
-	return ImageTexture.create_from_image(image)
+func update_minimap():
+	minimap_texture.update(minimap_image)
