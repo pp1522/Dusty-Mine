@@ -13,4 +13,5 @@ biome_info = Array[ExtResource("1_ellla")]([])
 atlas = Vector2i(1, 5)
 is_liquid = false
 is_mineable = false
+minimap_color = Color(0.36862746, 0.7372549, 0.40392157, 1)
 metadata/_custom_type_script = "uid://bl5usqx6mgiix"

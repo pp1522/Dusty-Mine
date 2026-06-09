@@ -159,6 +159,7 @@ func generate_chunk(chunk: Vector2i = Vector2i(0, 0)):
 			for terrain in terrain_types:
 				if terrain and noise_value < terrain.threshold:
 					if terrain.type == TerrainType.TileType.Height:
+						update_minimap_tile(tile_pos, terrain.minimap_color)
 						place_tile(tile_pos, terrain.atlas, terrain.is_liquid, terrain.is_mineable)
 					elif terrain.type == TerrainType.TileType.Biome:
 						var biome_value = biome_noise.get_noise_2d(px, py)
@@ -170,23 +171,23 @@ func generate_chunk(chunk: Vector2i = Vector2i(0, 0)):
 
 					break
 
-	gui.minimap.update_minimap()
+	if !Engine.is_editor_hint():
+		gui.minimap.update_minimap()
 
 func place_tile(tile_pos: Vector2i, atlas: Vector2i, is_liquid: bool, is_mineable: bool):
 	if is_liquid:
-		gui.minimap.update_minimap_tile(tile_pos, Color.BLUE)
 		liquid_tilemap.set_cell(tile_pos, 0, atlas)
 	elif is_mineable:
-		gui.minimap.update_minimap_tile(tile_pos, Color.RED)
 		mineable_tilemap.set_cell(tile_pos, 0, atlas)
 	else:
-		gui.minimap.update_minimap_tile(tile_pos, Color.GREEN)
 		tilemap.set_cell(tile_pos, 0, atlas)
 
 func place_biome(tile_pos: Vector2i, biome_value: float, terrain: TerrainType):
 	for i in range(terrain.biome_info.size()):
 		if (terrain.biome_info[i] and
-			(biome_value < terrain.biome_info[i].threshold)):
+			(biome_value < terrain.biome_info[i].threshold)
+		):
+			update_minimap_tile(tile_pos, terrain.biome_info[i].minimap_color)
 			place_tile(tile_pos, terrain.biome_info[i].atlas, terrain.biome_info[i].tile_is_liquid, terrain.biome_info[i].tile_is_mineable)
 			break
 
@@ -202,6 +203,7 @@ func place_ores(tile_pos: Vector2i, px: int, py: int):
 
 		if ore_value < ore.threshold:
 			if ore.type == TerrainType.TileType.Ore:
+				update_minimap_tile(tile_pos, ore.minimap_color)
 				ores_tilemap.set_cell(tile_pos, 0, ore.atlas)
 				break
 
@@ -226,3 +228,7 @@ func remove_chunk(chunk: Vector2i):
 			var tile_pos = Vector2i(px, py)
 
 			remove_tile(tile_pos)
+
+func update_minimap_tile(tile_pos: Vector2i, color: Color):
+	if Engine.is_editor_hint(): return
+	gui.minimap.update_minimap_tile(tile_pos, color)

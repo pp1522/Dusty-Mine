@@ -9,6 +9,7 @@ name = "Water"
 threshold = 0.7
 atlas = Vector2i(0, 2)
 tile_is_liquid = true
+minimap_color = Color(0.28627452, 0.5294118, 0.75686276, 1)
 metadata/_custom_type_script = "uid://cjs2tv4xbgr4f"
 
 [sub_resource type="Resource" id="Resource_bn7g5"]
@@ -16,6 +17,7 @@ script = ExtResource("1_bn7g5")
 name = "Ice"
 threshold = 0.9
 atlas = Vector2i(3, 1)
+minimap_color = Color(0.5921569, 0.83137256, 0.9137255, 1)
 metadata/_custom_type_script = "uid://cjs2tv4xbgr4f"
 
 [sub_resource type="Resource" id="Resource_a5kac"]
@@ -36,4 +38,5 @@ biome_info = Array[ExtResource("1_bn7g5")]([SubResource("Resource_rick8"), SubRe
 atlas = Vector2i(0, 2)
 is_liquid = true
 is_mineable = false
+minimap_color = Color(1, 0, 1, 1)
 metadata/_custom_type_script = "uid://bl5usqx6mgiix"

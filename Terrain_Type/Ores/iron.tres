@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="TerrainType" format=3 uid="uid://djqfdlxpdklhp"]
 
 [ext_resource type="Script" uid="uid://bl5usqx6mgiix" path="res://Scripts/Terrain/terrain_type.gd" id="1_aqq4v"]
+[ext_resource type="Script" uid="uid://cjs2tv4xbgr4f" path="res://Scripts/Terrain/terrain_info.gd" id="1_ge2gj"]
 
 [resource]
 script = ExtResource("1_aqq4v")
@@ -8,11 +9,9 @@ type = 2
 name = "Iron"
 threshold = 0.2
 place_ore = false
-biome_threshold = Array[float]([])
+biome_info = Array[ExtResource("1_ge2gj")]([])
 atlas = Vector2i(1, 2)
-biome_atlas = Array[Vector2i]([])
 is_liquid = false
-tile_is_liquid = Array[bool]([])
 is_mineable = false
-tile_is_mineable = Array[bool]([])
+minimap_color = Color(0.72156864, 0.72156864, 0.72156864, 1)
 metadata/_custom_type_script = "uid://bl5usqx6mgiix"

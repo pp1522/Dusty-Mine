@@ -7,6 +7,7 @@
 script = ExtResource("1_rqa14")
 name = "Grass"
 threshold = 0.5
+minimap_color = Color(0.19607843, 0.5686275, 0.26666668, 1)
 metadata/_custom_type_script = "uid://cjs2tv4xbgr4f"
 
 [sub_resource type="Resource" id="Resource_2oim1"]
@@ -14,6 +15,7 @@ script = ExtResource("1_rqa14")
 name = "Stone"
 threshold = 0.7
 atlas = Vector2i(1, 0)
+minimap_color = Color(0.40392157, 0.40392157, 0.40392157, 1)
 metadata/_custom_type_script = "uid://cjs2tv4xbgr4f"
 
 [sub_resource type="Resource" id="Resource_3oboo"]
@@ -21,6 +23,7 @@ script = ExtResource("1_rqa14")
 name = "Snow"
 threshold = 0.9
 atlas = Vector2i(3, 0)
+minimap_color = Color(0.8862745, 0.8862745, 0.8862745, 1)
 metadata/_custom_type_script = "uid://cjs2tv4xbgr4f"
 
 [sub_resource type="Resource" id="Resource_k7m3d"]
@@ -28,6 +31,7 @@ script = ExtResource("1_rqa14")
 name = "Mystic"
 threshold = 1.0
 atlas = Vector2i(4, 0)
+minimap_color = Color(0.40784314, 0.22745098, 0.5764706, 1)
 metadata/_custom_type_script = "uid://cjs2tv4xbgr4f"
 
 [resource]
@@ -40,4 +44,5 @@ biome_info = Array[ExtResource("1_rqa14")]([SubResource("Resource_rqa14"), SubRe
 atlas = Vector2i(0, 0)
 is_liquid = false
 is_mineable = false
+minimap_color = Color(1, 0, 1, 1)
 metadata/_custom_type_script = "uid://bl5usqx6mgiix"

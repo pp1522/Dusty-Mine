@@ -9,6 +9,7 @@ name = "Sand"
 threshold = 0.7
 atlas = Vector2i(2, 0)
 tile_is_mineable = true
+minimap_color = Color(0.8352941, 0.8235294, 0.6, 1)
 metadata/_custom_type_script = "uid://cjs2tv4xbgr4f"
 
 [sub_resource type="Resource" id="Resource_xxy4t"]
@@ -17,6 +18,7 @@ name = "Snowy Sand"
 threshold = 0.9
 atlas = Vector2i(2, 1)
 tile_is_mineable = true
+minimap_color = Color(0.8862745, 0.8862745, 0.8862745, 1)
 metadata/_custom_type_script = "uid://cjs2tv4xbgr4f"
 
 [sub_resource type="Resource" id="Resource_yiiwt"]
@@ -25,6 +27,7 @@ name = "Mystic Sand"
 threshold = 1.0
 atlas = Vector2i(5, 0)
 tile_is_mineable = true
+minimap_color = Color(0.49019608, 0.35686275, 0.6509804, 1)
 metadata/_custom_type_script = "uid://cjs2tv4xbgr4f"
 
 [resource]
@@ -37,4 +40,5 @@ biome_info = Array[ExtResource("1_g8cj2")]([SubResource("Resource_g8cj2"), SubRe
 atlas = Vector2i(2, 0)
 is_liquid = false
 is_mineable = false
+minimap_color = Color(1, 0, 1, 1)
 metadata/_custom_type_script = "uid://bl5usqx6mgiix"

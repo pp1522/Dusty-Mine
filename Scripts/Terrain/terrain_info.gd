@@ -7,3 +7,5 @@ extends Resource
 @export var atlas: Vector2i
 @export var tile_is_liquid: bool = false
 @export var tile_is_mineable: bool = false
+
+@export var minimap_color: Color = Color.MAGENTA

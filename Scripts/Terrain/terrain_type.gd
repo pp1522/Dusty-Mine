@@ -31,6 +31,8 @@ var atlas: Vector2i
 var is_liquid: bool = false
 var is_mineable: bool = false
 
+var minimap_color: Color = Color.MAGENTA
+
 func _get_property_list():
 	var properties = []
 
@@ -64,6 +66,12 @@ func _get_property_list():
 		"name": "is_mineable",
 		"type": TYPE_BOOL,
 		"usage": PROPERTY_USAGE_DEFAULT if type == TileType.Height else PROPERTY_USAGE_NO_EDITOR
+	})
+
+	properties.append({
+		"name": "minimap_color",
+		"type": TYPE_COLOR,
+		"usage": PROPERTY_USAGE_DEFAULT if (type == TileType.Height) or (type == TileType.Ore) else PROPERTY_USAGE_NO_EDITOR
 	})
 
 	return properties
