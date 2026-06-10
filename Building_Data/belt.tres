@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="BuildingButton" format=3 uid="uid://xl4i0hmn6w5x"]
+
+[ext_resource type="Texture2D" uid="uid://ccj00ys5tki8p" path="res://Assets/building/belt.png" id="1_au227"]
+[ext_resource type="Script" uid="uid://x6rcbdr5gv2w" path="res://Scripts/button_type.gd" id="2_lipwi"]
+
+[resource]
+script = ExtResource("2_lipwi")
+name = "belt"
+image = ExtResource("1_au227")
+metadata/_custom_type_script = "uid://x6rcbdr5gv2w"

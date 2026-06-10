@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="BuildingButton" format=3 uid="uid://djdhrykagi2gg"]
+
+[ext_resource type="Texture2D" uid="uid://brg8tpjcnivq8" path="res://Assets/building/barrel.png" id="1_2noyd"]
+[ext_resource type="Script" uid="uid://x6rcbdr5gv2w" path="res://Scripts/button_type.gd" id="2_5xqgr"]
+
+[resource]
+script = ExtResource("2_5xqgr")
+name = "barrel"
+image = ExtResource("1_2noyd")
+size = Vector2(2, 2)
+metadata/_custom_type_script = "uid://x6rcbdr5gv2w"

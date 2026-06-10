@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="BuildingButton" format=3 uid="uid://bwmwrr3it138x"]
+
+[ext_resource type="Texture2D" uid="uid://c0vfwjtyw0vl4" path="res://Assets/building/gun_turret.png" id="1_i87jh"]
+[ext_resource type="Script" uid="uid://x6rcbdr5gv2w" path="res://Scripts/button_type.gd" id="2_c27uy"]
+
+[resource]
+script = ExtResource("2_c27uy")
+name = "gun_turret"
+image = ExtResource("1_i87jh")
+size = Vector2(2, 2)
+metadata/_custom_type_script = "uid://x6rcbdr5gv2w"

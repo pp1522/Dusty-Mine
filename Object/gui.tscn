@@ -3,41 +3,16 @@
 [ext_resource type="Script" uid="uid://em4eb0jnytcu" path="res://Scripts/gui.gd" id="1_cbbba"]
 [ext_resource type="Script" uid="uid://c0g4m2pc3g7bs" path="res://Scripts/Building/building_gui.gd" id="2_xsjf8"]
 [ext_resource type="Script" uid="uid://x6rcbdr5gv2w" path="res://Scripts/button_type.gd" id="2_yfyb4"]
-[ext_resource type="Texture2D" uid="uid://ccj00ys5tki8p" path="res://Assets/building/belt.png" id="3_ttf4w"]
-[ext_resource type="Texture2D" uid="uid://cswgb6s2m1vu5" path="res://Assets/building/drill.png" id="4_x1ilv"]
+[ext_resource type="Resource" uid="uid://xl4i0hmn6w5x" path="res://Building_Data/belt.tres" id="4_qfdjt"]
+[ext_resource type="Resource" uid="uid://bg2ilm0gmlkgu" path="res://Building_Data/drill.tres" id="5_1amfi"]
 [ext_resource type="Script" uid="uid://bhb7tfy0i18pw" path="res://Scripts/inventory.gd" id="5_ttf4w"]
-[ext_resource type="Texture2D" uid="uid://brg8tpjcnivq8" path="res://Assets/building/barrel.png" id="6_6ng3o"]
+[ext_resource type="Resource" uid="uid://djdhrykagi2gg" path="res://Building_Data/barrel.tres" id="6_kx7dq"]
 [ext_resource type="Texture2D" uid="uid://chk0h05gkqcq" path="res://Assets/items/copper_ingot.png" id="6_mdw2k"]
-[ext_resource type="Texture2D" uid="uid://by34c5a65stnj" path="res://Assets/building/vault.png" id="7_p3hxs"]
+[ext_resource type="Resource" uid="uid://dg806bn7koym8" path="res://Building_Data/vault.tres" id="7_1hd82"]
 [ext_resource type="Script" uid="uid://2y2rfvvrddfp" path="res://Scripts/resource_type.gd" id="7_xsjf8"]
+[ext_resource type="Resource" uid="uid://cfenjcqmwk7bt" path="res://Building_Data/assembling_machine.tres" id="8_tdig8"]
+[ext_resource type="Resource" uid="uid://bwmwrr3it138x" path="res://Building_Data/gun_turret.tres" id="9_ciigl"]
 [ext_resource type="Script" uid="uid://0pkwohdikd7m" path="res://Scripts/mini_map.gd" id="11_p3hxs"]
-
-[sub_resource type="Resource" id="Resource_yfyb4"]
-script = ExtResource("2_yfyb4")
-name = "belt"
-image = ExtResource("3_ttf4w")
-metadata/_custom_type_script = "uid://x6rcbdr5gv2w"
-
-[sub_resource type="Resource" id="Resource_ttf4w"]
-script = ExtResource("2_yfyb4")
-name = "drill"
-image = ExtResource("4_x1ilv")
-size = Vector2i(2, 2)
-metadata/_custom_type_script = "uid://x6rcbdr5gv2w"
-
-[sub_resource type="Resource" id="Resource_0wwjd"]
-script = ExtResource("2_yfyb4")
-name = "barrel"
-image = ExtResource("6_6ng3o")
-size = Vector2i(2, 2)
-metadata/_custom_type_script = "uid://x6rcbdr5gv2w"
-
-[sub_resource type="Resource" id="Resource_qfdjt"]
-script = ExtResource("2_yfyb4")
-name = "vault"
-image = ExtResource("7_p3hxs")
-size = Vector2i(3, 3)
-metadata/_custom_type_script = "uid://x6rcbdr5gv2w"
 
 [sub_resource type="Resource" id="Resource_lejmp"]
 script = ExtResource("7_xsjf8")
@@ -61,10 +36,7 @@ anchor_top = 0.6
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("2_xsjf8")
-button = Array[ExtResource("2_yfyb4")]([SubResource("Resource_yfyb4"), SubResource("Resource_ttf4w"), SubResource("Resource_0wwjd"), SubResource("Resource_qfdjt")])
-button_size = null
-button_scale = null
-button_offset = null
+button = Array[ExtResource("2_yfyb4")]([ExtResource("4_qfdjt"), ExtResource("5_1amfi"), ExtResource("6_kx7dq"), ExtResource("7_1hd82"), ExtResource("8_tdig8"), ExtResource("9_ciigl")])
 
 [node name="ColorRect" type="ColorRect" parent="Building" unique_id=560173485]
 layout_mode = 1

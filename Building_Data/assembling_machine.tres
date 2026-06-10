@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="BuildingButton" format=3 uid="uid://cfenjcqmwk7bt"]
+
+[ext_resource type="Texture2D" uid="uid://5kc4u1l42fyy" path="res://Assets/building/assembling_machine.png" id="1_skbdx"]
+[ext_resource type="Script" uid="uid://x6rcbdr5gv2w" path="res://Scripts/button_type.gd" id="2_56btk"]
+
+[resource]
+script = ExtResource("2_56btk")
+name = "assembling_machine"
+image = ExtResource("1_skbdx")
+size = Vector2(3, 3)
+metadata/_custom_type_script = "uid://x6rcbdr5gv2w"
