@@ -30,6 +30,8 @@
 [ext_resource type="PackedScene" uid="uid://cn055g1bjv4iu" path="res://Object/building/vault.tscn" id="23_7k868"]
 [ext_resource type="Resource" uid="uid://cerpympwmnj1h" path="res://Terrain_Type/Ores_Data/coal.tres" id="23_ueoa1"]
 [ext_resource type="Resource" uid="uid://d0188dvx0pcaj" path="res://Terrain_Type/Ores_Data/sand.tres" id="24_6vcvc"]
+[ext_resource type="PackedScene" uid="uid://cs5uvjqclgmru" path="res://Object/building/assembling_machine.tscn" id="24_hpc6h"]
+[ext_resource type="PackedScene" uid="uid://kpuqnea5jivw" path="res://Object/building/gun_turret.tscn" id="25_kltya"]
 
 [node name="Main" type="Node2D" unique_id=1290030476]
 script = ExtResource("1_fevyy")
@@ -63,9 +65,11 @@ tile_set = ExtResource("5_kry3j")
 [node name="Building" type="Node2D" parent="." unique_id=31921302 node_paths=PackedStringArray("player", "liquid_tile", "ground_tile", "mineable_ground_tile", "ore_tile", "spawner")]
 script = ExtResource("5_21xkr")
 BUILDING = Dictionary[String, Resource]({
+"assembling_machine": ExtResource("24_hpc6h"),
 "barrel": ExtResource("22_6vcvc"),
 "belt": ExtResource("21_6vcvc"),
 "drill": ExtResource("20_ueoa1"),
+"gun_turret": ExtResource("25_kltya"),
 "vault": ExtResource("23_7k868")
 })
 player = NodePath("../Player")
