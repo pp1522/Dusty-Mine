@@ -17,8 +17,8 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	for child in builds.get_children():
 		if !(child.place and !child.remove): continue
-		if child.build_type == "drill":
-			if child.properties.type != "drill": continue
+		if !child.properties: continue
+		if child.properties.type == "drill":
 			if !child.data.has("tick"): child.data["tick"] = 0
 			child.data["tick"] += 1
 
@@ -44,7 +44,7 @@ func _process(_delta: float) -> void:
 						b.item.append(child.item[0])
 						child.item.remove_at(0)
 
-		elif child.build_type == "belt":
+		elif child.properties.type == "belt":
 			if (!child.data.has("Belt_Target") or
 				child.data["Belt_Target"].size() == 0
 			): continue

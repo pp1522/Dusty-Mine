@@ -32,6 +32,7 @@
 [ext_resource type="Resource" uid="uid://d0188dvx0pcaj" path="res://Terrain_Type/Ores_Data/sand.tres" id="24_6vcvc"]
 [ext_resource type="PackedScene" uid="uid://cs5uvjqclgmru" path="res://Object/building/assembling_machine.tscn" id="24_hpc6h"]
 [ext_resource type="PackedScene" uid="uid://kpuqnea5jivw" path="res://Object/building/gun_turret.tscn" id="25_kltya"]
+[ext_resource type="PackedScene" uid="uid://bqln0suuedll4" path="res://Object/building/drill_advance.tscn" id="26_e08e2"]
 
 [node name="Main" type="Node2D" unique_id=1290030476]
 script = ExtResource("1_fevyy")
@@ -69,6 +70,7 @@ BUILDING = Dictionary[String, Resource]({
 "barrel": ExtResource("22_6vcvc"),
 "belt": ExtResource("21_6vcvc"),
 "drill": ExtResource("20_ueoa1"),
+"drill_advance": ExtResource("26_e08e2"),
 "gun_turret": ExtResource("25_kltya"),
 "vault": ExtResource("23_7k868")
 })

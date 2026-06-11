@@ -327,7 +327,8 @@ func update_belt(belt: Building):
 			belt.data["Belt_Target"].append(building_tile[pos])
 
 func update_building(building: Building):
-	if building.build_type == "drill":
+	if !building.properties: return
+	if building.properties.type == "drill":
 		if ores_data.size() == 0: return
 		var cover = get_cover(building)
 		var ore_cover: Dictionary = {}
@@ -366,14 +367,15 @@ func update_building(building: Building):
 				max_ore = ore_cover[ore][1]
 
 		building.data["Ore"] = max_ore
-	elif building.build_type == "belt":
+	elif building.properties.type == "belt":
 		update_belt(building)
 	elif building.properties.can_insert_item:
 		var cover = get_cover(building)
 		for t in cover:
 			var build_arround = get_building_around(t)
 			for b in build_arround:
-				if b.build_type == "belt":
+				if !b.properties: continue
+				if b.properties.type == "belt":
 					update_belt(b)
 
 func _on_gui_building_select(building: String) -> void:
