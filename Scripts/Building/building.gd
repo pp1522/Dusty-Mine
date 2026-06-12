@@ -73,9 +73,20 @@ func toggle_item():
 			i.queue_free()
 	else:
 		ui.visible = true
+		var item_amount: Dictionary = {}
 
 		for i: ResourceType in item:
+			if !item_amount.has(i):
+				item_amount[i] = 0
+			item_amount[i] += 1
+
+		for i in item_amount:
 			var item_image: TextureRect = TextureRect.new()
 			item_image.texture = i.image
 
 			item_ui.add_child(item_image)
+
+			var item_label: Label = Label.new()
+			item_label.text = str(item_amount[i])
+
+			item_ui.add_child(item_label)
