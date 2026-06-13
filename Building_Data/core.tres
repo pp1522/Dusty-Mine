@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="BuildingButton" format=3 uid="uid://bogb4gelbce0c"]
+
+[ext_resource type="Texture2D" uid="uid://iqb68odrfbpi" path="res://Assets/building/core.png" id="1_hxwgl"]
+[ext_resource type="Script" uid="uid://x6rcbdr5gv2w" path="res://Scripts/button_type.gd" id="2_bstta"]
+
+[resource]
+script = ExtResource("2_bstta")
+name = "core"
+image = ExtResource("1_hxwgl")
+size = Vector2(3, 3)
+metadata/_custom_type_script = "uid://x6rcbdr5gv2w"

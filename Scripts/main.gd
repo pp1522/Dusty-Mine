@@ -6,6 +6,8 @@ extends Node2D
 
 @onready var terrain: TerrainGen = $Tiles
 
+@onready var gui: Gui = $CanvasLayer/Gui
+
 func _ready() -> void:
 	if NetworkHandler.host:
 		NetworkHandler.start_server()
@@ -67,3 +69,7 @@ func _process(_delta: float) -> void:
 
 					b.item.append(child.item[0])
 					child.item.remove_at(0)
+
+		elif child.properties.type == "core":
+			gui.core_data = child.item
+			gui.update_items()

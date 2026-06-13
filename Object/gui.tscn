@@ -7,19 +7,12 @@
 [ext_resource type="Resource" uid="uid://bg2ilm0gmlkgu" path="res://Building_Data/drill.tres" id="5_1amfi"]
 [ext_resource type="Script" uid="uid://bhb7tfy0i18pw" path="res://Scripts/inventory.gd" id="5_ttf4w"]
 [ext_resource type="Resource" uid="uid://djdhrykagi2gg" path="res://Building_Data/barrel.tres" id="6_kx7dq"]
-[ext_resource type="Texture2D" uid="uid://chk0h05gkqcq" path="res://Assets/items/copper_ingot.png" id="6_mdw2k"]
 [ext_resource type="Resource" uid="uid://dg806bn7koym8" path="res://Building_Data/vault.tres" id="7_1hd82"]
-[ext_resource type="Script" uid="uid://2y2rfvvrddfp" path="res://Scripts/resource_type.gd" id="7_xsjf8"]
 [ext_resource type="Resource" uid="uid://cfenjcqmwk7bt" path="res://Building_Data/assembling_machine.tres" id="8_tdig8"]
 [ext_resource type="Resource" uid="uid://bwmwrr3it138x" path="res://Building_Data/gun_turret.tres" id="9_ciigl"]
 [ext_resource type="Resource" uid="uid://cu5ggyyrsfbbh" path="res://Building_Data/drill_advance.tres" id="10_1amfi"]
 [ext_resource type="Script" uid="uid://0pkwohdikd7m" path="res://Scripts/mini_map.gd" id="11_p3hxs"]
-
-[sub_resource type="Resource" id="Resource_lejmp"]
-script = ExtResource("7_xsjf8")
-name = "copper"
-image = ExtResource("6_mdw2k")
-metadata/_custom_type_script = "uid://2y2rfvvrddfp"
+[ext_resource type="Resource" uid="uid://bogb4gelbce0c" path="res://Building_Data/core.tres" id="11_qfdjt"]
 
 [node name="Gui" type="Control" unique_id=2009881913]
 layout_mode = 3
@@ -37,8 +30,8 @@ anchor_top = 0.6
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("2_xsjf8")
-button = Array[ExtResource("2_yfyb4")]([ExtResource("4_qfdjt"), ExtResource("5_1amfi"), ExtResource("6_kx7dq"), ExtResource("7_1hd82"), ExtResource("8_tdig8"), ExtResource("9_ciigl"), ExtResource("10_1amfi")])
-button_grid = Vector2i(3, 3)
+button = Array[ExtResource("2_yfyb4")]([ExtResource("4_qfdjt"), ExtResource("5_1amfi"), ExtResource("6_kx7dq"), ExtResource("7_1hd82"), ExtResource("8_tdig8"), ExtResource("9_ciigl"), ExtResource("10_1amfi"), ExtResource("11_qfdjt")])
+button_grid = Vector2i(4, 3)
 
 [node name="ColorRect" type="ColorRect" parent="Building" unique_id=560173485]
 layout_mode = 1
@@ -56,7 +49,6 @@ anchor_right = 0.6
 anchor_bottom = 0.1
 grow_horizontal = 2
 script = ExtResource("5_ttf4w")
-resources = Array[ExtResource("7_xsjf8")]([SubResource("Resource_lejmp")])
 
 [node name="ColorRect" type="ColorRect" parent="Items" unique_id=1617730566]
 layout_mode = 1
@@ -66,6 +58,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.39215687)
+
+[node name="Items" type="Control" parent="Items" unique_id=1791595791]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="MiniMap" type="Control" parent="." unique_id=1318208265]
 layout_mode = 1
