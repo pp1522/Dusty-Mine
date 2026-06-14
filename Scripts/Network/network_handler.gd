@@ -51,7 +51,11 @@ func _add_player(id: int):
 	players_node.add_child(new_player, true)
 
 	var building = get_tree().current_scene.get_node("Building")
+	var gui = get_tree().current_scene.get_node("CanvasLayer").get_node("Gui")
+	new_player.build = building
 	new_player.click_event.connect(building._on_player_click_event)
+	new_player.click_remove_event.connect(building._on_player_click_remove_event)
+	gui.building_select.connect(new_player._on_gui_building_select)
 
 func _remove_player(id: int):
 	if not players_node.has_node(str(id)): return
