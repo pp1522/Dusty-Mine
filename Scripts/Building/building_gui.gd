@@ -1,7 +1,7 @@
 extends Control
 
 
-signal select(building)
+signal select(building: String)
 
 @export var button: Array[BuildingButton]
 

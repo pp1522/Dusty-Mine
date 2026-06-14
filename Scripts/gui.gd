@@ -2,7 +2,7 @@ class_name Gui
 extends Control
 
 
-signal building_select(building)
+signal building_select(building: String)
 
 @export var terrain_gen: TerrainGen
 
@@ -22,5 +22,5 @@ func update_items():
 		items.resources[i] += 1
 	items.update_item()
 
-func _on_building_select(building: Variant) -> void:
+func _on_building_select(building: String) -> void:
 	building_select.emit(building)

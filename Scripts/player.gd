@@ -2,7 +2,8 @@ class_name SinglePlayer
 extends Node2D
 
 
-signal click_event(pos: Vector2)
+signal click_event(pos: Vector2, build_rotation: float, building: String)
+signal click_remove_event(pos: Vector2)
 
 @export var speed: int = 10
 @export var player_speed: int = 250
@@ -15,11 +16,22 @@ signal click_event(pos: Vector2)
 @export var camera: Camera2D
 @export var player: CharacterBody2D
 
+@export var build: Build
+
 var vel = Vector2.ZERO
+var select_building: String = ""
+var current_building: Building
+var current_rotation: float = 0.0
 
 func get_input():
 	var direction = Input.get_vector("left", "right", "up", "down")
 	vel = direction * speed
+
+func _process(_delta: float) -> void:
+	if current_building:
+		build.snap(current_building, get_global_mouse_position())
+	elif select_building:
+		set_current_building(select_building)
 
 func _physics_process(_delta: float) -> void:
 	get_input()
@@ -41,5 +53,41 @@ func _input(_event: InputEvent) -> void:
 		camera.zoom = Vector2(z, z)
 
 	if Input.is_action_just_pressed("place"):
-		var pos = get_global_mouse_position()
-		click_event.emit(pos)
+		click_event.emit(get_global_mouse_position(), current_rotation, select_building)
+
+	if Input.is_action_just_pressed("remove") and current_building:
+		current_building.queue_free()
+		current_building = null
+		select_building = ""
+
+	elif Input.is_action_just_pressed("remove"):
+		click_remove_event.emit(get_global_mouse_position())
+
+	if Input.is_action_just_pressed("rotate") and current_building:
+		current_rotation = wrapf(current_rotation+90.0, 0.0, 360.0)
+		current_building.building_rotate(current_rotation)
+
+func set_current_building(building: String):
+	if current_building:
+		current_building.queue_free()
+		current_building = null
+
+	var newBuilding = build.BUILDING[building].instantiate()
+	current_building = newBuilding
+
+	newBuilding.modulate.r = 0.0
+	newBuilding.modulate.g = 0.0
+	newBuilding.modulate.b = 0.0
+
+	newBuilding.set_sync(false)
+
+	add_child(newBuilding)
+	build.snap(newBuilding, get_global_mouse_position())
+	build.update_highlight(newBuilding)
+	current_building.building_rotate(current_rotation)
+
+func _on_gui_building_select(building: String) -> void:
+	select_building = building
+	if current_building:
+		current_building.queue_free()
+		current_building = null

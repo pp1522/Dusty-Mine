@@ -22,11 +22,8 @@ extends Node2D
 
 var debug: bool = false
 
-var select_building: String = ""
-var current_building: Building
 var old_pos: Vector2
 var building_object: PackedScene
-var current_rotation: float = 0.0
 
 var building_tile: Dictionary[Vector2i, Building] = {}
 
@@ -37,28 +34,7 @@ func _ready() -> void:
 		spawner.add_spawnable_scene("res://Object/building/drill.tscn")
 		spawner.add_spawnable_scene("res://Object/building/belt.tscn")
 
-func _input(_event: InputEvent) -> void:
-	if Input.is_action_just_pressed("place") and current_building:
-		queue_building()
-
-	elif Input.is_action_just_pressed("remove") and current_building:
-		current_building.queue_free()
-		current_building = null
-		select_building = ""
-
-	elif Input.is_action_just_pressed("remove"):
-		queue_remove()
-
-	elif Input.is_action_just_pressed("rotate") and current_building:
-		current_rotation = wrapf(current_rotation+90.0, 0.0, 360.0)
-		current_building.building_rotate(current_rotation)
-
 func _process(_delta: float) -> void:
-	if current_building:
-		snap(current_building, get_global_mouse_position())
-	elif select_building:
-		set_current_building(select_building)
-
 	for c in build_global.get_children():
 		if player.get_child_count() == 0: return
 		for p in player.get_children():
@@ -196,28 +172,30 @@ func get_building_rotation(building: Building):
 
 	return Vector2i.DOWN
 
-func queue_building():
-	if not is_valid(current_building): return
+func queue_building(building: String, build_pos: Vector2, build_rotation: float):
+	var newBuilding: Building = create_building(building, build_pos, build_rotation)
+
+	if not is_valid(newBuilding):
+		newBuilding.queue_free()
+		return
 
 	if NetworkHandler.single:
-		local_place_queue(current_building, current_rotation)
+		local_place_queue(newBuilding)
 	else:
 		if multiplayer.is_server():
-			online_place(select_building, current_building.global_position, current_rotation)
+			online_place(building, newBuilding.global_position, build_rotation)
 		else:
-			online_place.rpc_id(1, select_building, current_building.global_position, current_rotation)
-		current_building.queue_free()
+			online_place.rpc_id(1, building, newBuilding.global_position, build_rotation)
+		newBuilding.queue_free()
 
-	current_building = null
-
-func queue_remove():
+func queue_remove(pos: Vector2):
 	if NetworkHandler.single:
-		local_remove_queue(get_global_mouse_position())
+		local_remove_queue(pos)
 	else:
 		if multiplayer.is_server():
-			online_remove(get_global_mouse_position())
+			online_remove(pos)
 		else:
-			online_remove.rpc_id(1, get_global_mouse_position())
+			online_remove.rpc_id(1, pos)
 
 func place_building(building: Building):
 	snap(building, building.global_position)
@@ -260,9 +238,8 @@ func online_remove(building_pos: Vector2):
 					remove_building_tile(child)
 					child.set_remove()
 
-func local_place_queue(building: Building, build_rotation: float):
+func local_place_queue(building: Building):
 	building.reparent(build_global)
-	building.building_rotate(build_rotation)
 	snap(building, building.global_position)
 	building.set_queue()
 
@@ -281,14 +258,8 @@ func local_remove_queue(building_pos: Vector2):
 					remove_building_tile(child)
 					child.set_remove()
 
-func set_current_building(build: String):
-	if current_building:
-		current_building.queue_free()
-		current_building = null
-
-	var newBuilding = BUILDING[build].instantiate()
-	current_building = newBuilding
-
+func create_building(building: String, build_pos: Vector2, build_rotation: float):
+	var newBuilding = BUILDING[building].instantiate()
 	newBuilding.modulate.r = 0.0
 	newBuilding.modulate.g = 0.0
 	newBuilding.modulate.b = 0.0
@@ -296,9 +267,11 @@ func set_current_building(build: String):
 	newBuilding.set_sync(false)
 
 	build_preview.add_child(newBuilding)
-	snap(newBuilding, get_global_mouse_position())
+	snap(newBuilding, build_pos)
 	update_highlight(newBuilding)
-	current_building.building_rotate(current_rotation)
+	newBuilding.building_rotate(build_rotation)
+
+	return newBuilding
 
 func update_belt(belt: Building):
 	belt.data["Belt_Target"] = []
@@ -378,21 +351,17 @@ func update_building(building: Building):
 				if b.properties.type == "belt":
 					update_belt(b)
 
-func _on_gui_building_select(building: String) -> void:
-	if BUILDING.has(building):
-		select_building = building
-		set_current_building(building)
+func _on_player_click_event(pos: Vector2, build_rotation: float, building: String) -> void:
+	if building:
+		queue_building(building, pos, build_rotation)
 	else:
-		if current_building:
-			current_building.queue_free()
-			current_building = null
+		var tile_pos = ground_tile.local_to_map(ground_tile.to_local(pos))
+		var build = building_tile.get(tile_pos)
 
-func _on_player_click_event(pos: Vector2) -> void:
-	# BUG: Delay Multiplayer a bit so it not show inv when place.
-	var tile_pos = ground_tile.local_to_map(ground_tile.to_local(pos))
-	var building = building_tile.get(tile_pos)
+		if !build: return
 
-	if !building: return
+		if build.place and build.get_global_rect().has_point(pos):
+			build.toggle_item()
 
-	if building.place and building.get_global_rect().has_point(pos):
-		building.toggle_item()
+func _on_player_click_remove_event(pos: Vector2) -> void:
+	queue_remove(pos)
