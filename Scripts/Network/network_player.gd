@@ -30,6 +30,10 @@ var build: Build
 
 func _ready() -> void:
 	if multiplayer.get_unique_id() == player_id:
+		var gui = get_tree().current_scene.get_node("CanvasLayer").get_node("Gui")
+		gui.building_select.connect(_on_gui_building_select)
+		build = get_tree().current_scene.get_node("Building")
+
 		$Camera2D.make_current()
 	else:
 		$Camera2D.enabled = false
@@ -83,7 +87,7 @@ func set_current_building(building: String):
 	current_building.building_rotate(current_rotation)
 
 func mouse_click():
-	request_inventory.rpc_id(1, get_global_mouse_position())
+	fire_click_evnet.rpc_id(1, get_global_mouse_position(), select_building)
 
 func build_remove():
 	if current_building:
@@ -99,8 +103,8 @@ func build_rotate():
 		current_building.building_rotate(current_rotation)
 
 @rpc("any_peer", "call_local", "reliable")
-func request_inventory(pos: Vector2) -> void:
-	click_event.emit(pos, current_rotation, select_building)
+func fire_click_evnet(pos: Vector2, building: String) -> void:
+	click_event.emit(pos, current_rotation, building)
 
 func _on_gui_building_select(building: String) -> void:
 	select_building = building

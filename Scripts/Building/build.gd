@@ -31,8 +31,8 @@ func _ready() -> void:
 	if NetworkHandler.single:
 		spawner.queue_free()
 	else:
-		spawner.add_spawnable_scene("res://Object/building/drill.tscn")
-		spawner.add_spawnable_scene("res://Object/building/belt.tscn")
+		for b in BUILDING:
+			spawner.add_spawnable_scene(BUILDING[b].resource_path)
 
 func _process(_delta: float) -> void:
 	for c in build_global.get_children():
