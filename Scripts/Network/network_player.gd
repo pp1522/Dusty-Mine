@@ -87,7 +87,7 @@ func set_current_building(building: String):
 	current_building.building_rotate(current_rotation)
 
 func mouse_click():
-	fire_click_evnet.rpc_id(1, get_global_mouse_position(), select_building)
+	fire_click_evnet.rpc_id(1, get_global_mouse_position(), current_rotation, select_building)
 
 func build_remove():
 	if current_building:
@@ -103,8 +103,8 @@ func build_rotate():
 		current_building.building_rotate(current_rotation)
 
 @rpc("any_peer", "call_local", "reliable")
-func fire_click_evnet(pos: Vector2, building: String) -> void:
-	click_event.emit(pos, current_rotation, building)
+func fire_click_evnet(build_pos: Vector2, build_rotation: float, building: String) -> void:
+	click_event.emit(build_pos, build_rotation, building)
 
 func _on_gui_building_select(building: String) -> void:
 	select_building = building

@@ -83,15 +83,13 @@ color = Color(0, 0, 0, 0.39215687)
 
 [node name="Map" type="TextureRect" parent="MiniMap" unique_id=1681244200]
 layout_mode = 1
-anchors_preset = -1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 16.0
-offset_top = 16.0
-offset_right = -16.0
-offset_bottom = -16.0
 grow_horizontal = 2
 grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Inventory" type="Control" parent="." unique_id=786838351]
 visible = false
